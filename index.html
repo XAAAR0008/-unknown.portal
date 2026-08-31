@@ -1,181 +1,810 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>UNKNOWN — The Other Side</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
-*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden}body{font-family:Cairo,system-ui;background:#010207;color:#fff}
-canvas{position:fixed;inset:0}.shade{position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 45%,transparent 0,rgba(3,2,12,.2) 35%,rgba(0,0,0,.85) 100%)}
-section{position:fixed;inset:0;display:none;z-index:2;align-items:center;justify-content:center;padding:24px}section.on{display:flex}.top{position:absolute;top:20px;right:24px;left:24px;display:flex;justify-content:space-between;color:#9995aa;font-size:11px;letter-spacing:2px}.wrap{width:min(780px,94vw);text-align:center}.eyebrow{font-size:10px;letter-spacing:5px;color:#b07cff;margin-bottom:16px}h1{font-size:clamp(45px,10vw,100px);line-height:1;margin:0;text-shadow:0 0 45px #8b52ff66}h2{font-size:clamp(30px,6vw,60px);margin:5px 0 12px}p{color:#b8b3c5;line-height:2;font-size:15px}.btn{border:1px solid #a96fff66;background:#ffffff08;color:#fff;border-radius:40px;padding:13px 28px;font:700 14px Cairo;cursor:pointer;transition:.3s}.btn:hover{transform:translateY(-3px);box-shadow:0 0 45px #9555ff44}
-.portal{width:210px;height:315px;border:2px solid #b784ff88;border-radius:50%;margin:30px auto 22px;position:relative;box-shadow:0 0 25px #a15cff66,0 0 100px #6e39b533,inset 0 0 45px #9c5aff33;overflow:hidden}.portal:before{content:"";position:absolute;inset:8px;border-radius:50%;background:radial-gradient(circle at 50% 72%,#f1d8ffb0 0,#8c50c466 18%,#080517 62%);animation:p 3s infinite}.portal:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 45%,#c38cff22)}@keyframes p{50%{transform:scale(1.04);filter:brightness(1.4)}}
-.choices{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:25px}.choice{min-height:88px;border:1px solid #ffffff18;background:#ffffff06;border-radius:18px;color:#eee;font:600 15px Cairo;cursor:pointer;transition:.3s}.choice:hover{border-color:#ad78ff88;transform:translateY(-3px);background:#a15cff12}
-.letter{font-size:70px;text-shadow:0 0 35px #b071ff}.meter{height:2px;background:#ffffff12;width:180px;margin:25px auto;overflow:hidden}.meter i{display:block;height:100%;width:0;background:#c18bff;transition:1.2s}.fade{animation:fade .7s both}@keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-.glitch{animation:glitch .12s steps(2) 5}@keyframes glitch{50%{transform:translate(4px,-2px);filter:hue-rotate(60deg)}}
-.final{background:radial-gradient(circle at center,#170d2b 0,#03030b 45%,#000 100%)}.final h1{font-size:clamp(50px,12vw,125px)}
-@media(max-width:600px){.choices{grid-template-columns:1fr}.portal{width:155px;height:235px}}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-.signal{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:150px;height:4px;border-radius:8px;background:#ffffff12;overflow:hidden;opacity:.5}
-.signal i{display:block;width:0;height:100%;background:#c18bff}
-.holdhint{position:absolute;bottom:7px;width:100%;font-size:9px;color:#777;letter-spacing:2px}
+  <title>UNKNOWN</title>
 
-.secretGlow{position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),#b477ff18,transparent 18%);z-index:7;transition:background .15s}
-.tapdots{position:fixed;inset:0;z-index:6;pointer-events:none}
-.tapdot{position:absolute;width:5px;height:5px;border-radius:50%;background:#d5b4ff;box-shadow:0 0 18px #b477ff;animation:dot .8s forwards}
-@keyframes dot{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(7)}}
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-#veil{position:fixed;inset:0;background:#000;z-index:99;opacity:0;pointer-events:none;transition:opacity .7s}
-#veil.on{opacity:1}
-.alt{position:fixed;inset:0;background:radial-gradient(circle,#120a25,#000 70%);z-index:50;display:none;align-items:center;justify-content:center;text-align:center}
-.alt.on{display:flex;animation:altin 1.2s both}
-@keyframes altin{from{opacity:0;filter:blur(12px)}to{opacity:1;filter:none}}
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
 
-#film{position:fixed;inset:0;background:#000;z-index:120;display:none;align-items:center;justify-content:center;color:#fff;text-align:center}
-#film.on{display:flex;animation:film .9s both}
-.filmword{font-size:clamp(30px,7vw,70px);letter-spacing:8px;text-shadow:0 0 30px #b078ff;animation:word 2.2s ease-in-out infinite}
-@keyframes film{from{opacity:0}to{opacity:1}}@keyframes word{50%{opacity:.35;transform:scale(1.03)}}
-#echo{position:fixed;inset:0;z-index:110;display:none;align-items:center;justify-content:center;background:radial-gradient(circle,#170c2d,#000 72%);text-align:center}
-#echo.on{display:flex;animation:film 1s both}
+    body {
+      font-family: Arial, sans-serif;
+      color: white;
+      background: #02030b;
+    }
 
-#cursor{position:fixed;width:18px;height:18px;border:1px solid #c99cff;border-radius:50%;pointer-events:none;z-index:200;transform:translate(-50%,-50%);mix-blend-mode:screen;opacity:.7;transition:width .15s,height .15s}
-#cursor.big{width:55px;height:55px}
-</style></head>
+    canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(
+          circle at center,
+          transparent 5%,
+          rgba(10, 5, 25, 0.35) 45%,
+          rgba(0, 0, 0, 0.9) 100%
+        );
+    }
+
+    .screen {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+
+      padding: 25px;
+      text-align: center;
+    }
+
+    .screen.active {
+      display: flex;
+      animation: appear 0.8s ease;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: scale(1.04);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .content {
+      width: min(750px, 94vw);
+    }
+
+    .small {
+      color: #b98cff;
+      font-size: 11px;
+      letter-spacing: 5px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(48px, 10vw, 100px);
+      line-height: 1;
+      margin-bottom: 20px;
+
+      text-shadow:
+        0 0 20px rgba(170, 100, 255, 0.5),
+        0 0 60px rgba(130, 70, 255, 0.3);
+    }
+
+    h2 {
+      font-size: clamp(30px, 6vw, 60px);
+      margin-bottom: 15px;
+    }
+
+    p {
+      color: #bdb8ca;
+      font-size: 16px;
+      line-height: 2;
+      margin-bottom: 25px;
+    }
+
+    .portal {
+      width: 190px;
+      height: 300px;
+
+      margin: 30px auto;
+
+      border: 2px solid rgba(190, 140, 255, 0.7);
+      border-radius: 50%;
+
+      position: relative;
+      overflow: hidden;
+
+      box-shadow:
+        0 0 20px rgba(160, 90, 255, 0.7),
+        0 0 100px rgba(110, 50, 220, 0.3),
+        inset 0 0 50px rgba(160, 90, 255, 0.4);
+    }
+
+    .portal::before {
+      content: "";
+
+      position: absolute;
+      inset: 8px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle at 50% 70%,
+          rgba(240, 210, 255, 0.9),
+          rgba(120, 60, 190, 0.5) 20%,
+          rgba(5, 3, 18, 1) 65%
+        );
+
+      animation: breathe 3s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      50% {
+        transform: scale(1.05);
+        filter: brightness(1.5);
+      }
+    }
+
+    button {
+      border: 1px solid rgba(180, 120, 255, 0.6);
+
+      background: rgba(255, 255, 255, 0.05);
+
+      color: white;
+
+      border-radius: 50px;
+
+      padding: 14px 30px;
+
+      font-size: 16px;
+      font-weight: bold;
+
+      cursor: pointer;
+
+      transition: 0.3s;
+
+      backdrop-filter: blur(10px);
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+
+      box-shadow:
+        0 0 30px rgba(160, 90, 255, 0.4);
+    }
+
+    .choices {
+      display: grid;
+
+      grid-template-columns: repeat(2, 1fr);
+
+      gap: 15px;
+
+      margin-top: 30px;
+    }
+
+    .choice {
+      min-height: 85px;
+
+      border-radius: 20px;
+
+      font-size: 15px;
+    }
+
+    .symbol {
+      font-size: 70px;
+
+      margin-bottom: 10px;
+
+      text-shadow:
+        0 0 30px rgba(190, 120, 255, 0.8);
+    }
+
+    .final {
+      background:
+        radial-gradient(
+          circle at center,
+          #160b2d,
+          #03030b 55%,
+          #000 100%
+        );
+    }
+
+    .final h1 {
+      font-size: clamp(55px, 12vw, 120px);
+    }
+
+    @media (max-width: 600px) {
+
+      .choices {
+        grid-template-columns: 1fr;
+      }
+
+      .portal {
+        width: 150px;
+        height: 240px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
 <body>
-<canvas id="c"></canvas><div class="shade"></div>
 
-<section id="a" class="on"><div class="top"><span>UNKNOWN / 01</span><span>00:00</span></div><div class="wrap fade"><div class="eyebrow">WELCOME TO THE UNKNOWN</div><h1>قبل ما تدخل...</h1><p>خد نفس.<br>وسيـب العالم برّه.</p><div class="portal"></div><button class="btn" onclick="show('b')">ابدأ الرحلة ←</button></div></section>
+  <canvas id="space"></canvas>
 
-<section id="b"><div class="top"><span>UNKNOWN / 02</span><span>اختيار واحد</span></div><div class="wrap fade"><div class="eyebrow">THE FIRST DOOR</div><h2>اختار أول إحساس جالك.</h2><p>مفيش إجابة صح أو غلط.</p><div class="choices"><button class="choice" onclick="choose('light')">☀️ النور</button><button class="choice" onclick="choose('silence')">◌ السكوت</button><button class="choice" onclick="choose('fear')">⌁ الخوف</button><button class="choice" onclick="choose('curiosity')">✦ الفضول</button></div></div></section>
+  <div class="overlay"></div>
 
-<section id="c1"><div class="wrap fade"><div class="eyebrow">THE ANSWER IS MOVING</div><div class="letter" id="ico">✦</div><h2 id="ttl"></h2><p id="txt"></p><div class="meter"><i id="bar"></i></div><button class="btn" onclick="show('d')">افتح الباب التالي</button></div></section>
 
-<section id="d"><div class="wrap fade"><div class="eyebrow">ONE LAST THING</div><h2>قبل النهاية...</h2><p>بص حواليك.<br>اختار كلمة واحدة بس، من غير ما تفكر.</p><div class="choices"><button class="choice" onclick="finish('now')">الآن</button><button class="choice" onclick="finish('later')">بعدين</button><button class="choice" onclick="finish('always')">دائمًا</button><button class="choice" onclick="finish('never')">أبدًا</button></div></div></section>
+  <!-- البداية -->
 
-<section id="e" class="final"><div class="wrap fade"><div class="eyebrow">UNKNOWN / 05</div><h1 id="end">...</h1><p id="endp"></p><button class="btn" onclick="secret()">مستعد لآخر حاجة؟</button></div></section>
-<section id="f" class="final"><div class="wrap fade"><div class="eyebrow">UNKNOWN / 06</div><div class="letter">◈</div><h2>متبصش وراك.</h2><p>فيه حاجات اتغيرت من أول ما دخلت.<br>ولو رجعت للبداية… مش هتلاقيها زي الأول.</p><button class="btn" onclick="show('a');setTimeout(()=>document.querySelector('#a .eyebrow').textContent='YOU CAME BACK',300)">ارجع للبداية ←</button></div></section>
+  <section class="screen active" id="start">
 
-<script>
-const cvs=document.querySelector('canvas'),ctx=cvs.getContext('2d');let W,H,stars=[];
-function size(){W=cvs.width=innerWidth*devicePixelRatio;H=cvs.height=innerHeight*devicePixelRatio;stars=Array.from({length:500},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.2,v:Math.random()*1.5+.2}))}size();addEventListener('resize',size);
-function draw(){ctx.clearRect(0,0,W,H);let g=ctx.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,Math.max(W,H)*.75);g.addColorStop(0,'#17102d');g.addColorStop(.5,'#060617');g.addColorStop(1,'#000107');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);stars.forEach(s=>{s.y-=s.v;if(s.y<0)s.y=H;ctx.globalAlpha=.2+Math.random()*.65;ctx.fillStyle='#fff';ctx.fillRect(s.x,s.y,s.r,s.r)});ctx.globalAlpha=1;requestAnimationFrame(draw)}draw();
-function show(id){document.querySelectorAll('section').forEach(s=>s.classList.remove('on'));let el=document.getElementById(id);el.classList.add('on');el.querySelector('.wrap')?.classList.remove('fade');void el.offsetWidth;el.querySelector('.wrap')?.classList.add('fade')}
-let first='';
-function choose(v){first=v;let d={light:['النور اختارك.','يمكن لأنك طول الوقت بتدور على حاجة واضحة وسط كل ده. بس مش كل نور بيكشف الحقيقة.','☀️'],silence:['إنت سمعت السكوت.','وده نادر. لأن أغلب الناس بتخاف من اللحظة اللي مفيهاش صوت.','◌'],fear:['الخوف دخل قبلك.','بس الغريب؟ إنك كملت رغم وجوده. يمكن دي كانت الإجابة من البداية.','⌁'],curiosity:['الفضول كسب.','وده أخطر اختيار في الرحلات دي كلها… لأنه مبيسمحلكش ترجع زي ما كنت.','✦']}[v];document.getElementById('ttl').textContent=d[0];document.getElementById('txt').textContent=d[1];document.getElementById('ico').textContent=d[2];setTimeout(()=>document.getElementById('bar').style.width='100%',100);show('c1')}
-function secret(){show('f')}\nfunction finish(v){let m={now:['دلوقتي.','كل حاجة مهمة حصلت لما بطلت تستنى.'],later:['مش دلوقتي.','أحيانًا التأجيل مش هروب… أحيانًا هو وقتك الحقيقي.'],always:['دائمًا.','بعض الحكايات مبتنتهيش، حتى لما الصفحة تقفل.'],never:['أبدًا.','يمكن بعض الأبواب اتعملت عشان تتساب مقفولة.']}[v];let e=document.getElementById('end');e.textContent=m[0];document.getElementById('endp').textContent=m[1];e.classList.remove('glitch');void e.offsetWidth;e.classList.add('glitch');show('e')}
-</script>
-<div id="ambient" style="position:fixed;inset:0;pointer-events:none;z-index:8;opacity:0;transition:opacity 1s">
-  <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#b477ff10,transparent 35%);mix-blend-mode:screen"></div>
-</div>
-<script>
-let idle;
-function wake(){
- document.getElementById('ambient').style.opacity='1';
- clearTimeout(idle);
- idle=setTimeout(()=>document.getElementById('ambient').style.opacity='0',1800);
-}
-['pointermove','touchstart','click'].forEach(e=>addEventListener(e,wake,{passive:true}));
-</script>
+    <div class="content">
 
-<section id="g" class="final"><div class="wrap fade"><div class="eyebrow">UNKNOWN / 07</div><div class="letter">✧</div><h2>لقيتها.</h2><p>مش كل الأسرار معمولة عشان تتشاف.<br>بعضها بس بيأكدلك إنك كنت بتدور في المكان الصح.</p><button class="btn" onclick="show('a')">ابدأ من جديد</button></div></section>
-<script>
-(function(){
- const e=document.getElementById('f'); if(!e)return;
- let timer,bar;
- function begin(){
-   clearInterval(timer);
-   let progress=0;
-   bar=document.createElement('div');
-   bar.className='signal';
-   bar.innerHTML='<i></i><div class="holdhint">لا تترك الزر...</div>';
-   e.appendChild(bar);
-   timer=setInterval(function(){
-     progress+=2;
-     bar.querySelector('i').style.width=progress+'%';
-     if(progress>=100){clearInterval(timer);show('g');bar.remove();bar=null;}
-   },45);
- }
- function cancel(){clearInterval(timer);if(bar){bar.remove();bar=null;}}
- e.addEventListener('pointerdown',begin);
- e.addEventListener('pointerup',cancel);
- e.addEventListener('pointerleave',cancel);
-})();
-</script>
+      <div class="small">
+        WELCOME TO THE UNKNOWN
+      </div>
 
-<div class="secretGlow" id="glow"></div><div class="tapdots" id="dots"></div>
-<script>
-(function(){
- const glow=document.getElementById('glow'), dots=document.getElementById('dots');
- addEventListener('pointermove',e=>{
-   glow.style.setProperty('--mx',e.clientX+'px');
-   glow.style.setProperty('--my',e.clientY+'px');
- });
- let taps=0,last=0;
- addEventListener('pointerdown',e=>{
-   const now=Date.now();
-   taps=(now-last<650)?taps+1:1; last=now;
-   if(taps>=7){
-     taps=0;
-     const d=document.createElement('div'); d.className='tapdot';
-     d.style.left=e.clientX+'px'; d.style.top=e.clientY+'px'; dots.appendChild(d);
-     setTimeout(()=>d.remove(),900);
-     const target=document.getElementById('g');
-     if(target && !target.classList.contains('on')){
-       setTimeout(()=>show('g'),350);
-     }
-   }
- });
-})();
-</script>
+      <h1>
+        قبل ما تدخل...
+      </h1>
 
-<div id="veil"></div>
-<section id="h" class="alt"><div class="wrap fade"><div class="eyebrow">UNKNOWN / ?</div><div class="letter">☽</div><h2>لسه صاحي؟</h2><p>يبقى إنت من القليل اللي وصلوا هنا.<br>خلي السر معاك.</p><button class="btn" onclick="show('a');document.getElementById('veil').classList.remove('on')">ارجع</button></div></section>
-<script>
-(function(){
- let seq=[],timer;
- const target=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight'];
- addEventListener('keydown',e=>{
-   seq.push(e.key); if(seq.length>target.length)seq.shift();
-   if(target.every((k,i)=>seq[i]===k)){
-     const v=document.getElementById('veil'); v.classList.add('on');
-     setTimeout(()=>show('h'),650); seq=[];
-   }
- });
- // A gentle pause when returning to the opening screen.
- const oldShow=window.show;
- window.show=function(id){
-   oldShow(id);
-   if(id==='a'){
-     document.title='UNKNOWN — The Other Side';
-   }
- };
-})();
-</script>
+      <p>
+        خد نفس.<br>
+        وسيب العالم برّه.
+      </p>
 
-<div id="film"><div class="filmword">لا تغمّض عينيك</div></div>
-<section id="i" class="alt"><div class="wrap fade"><div class="eyebrow">UNKNOWN / 08</div><div class="letter">◎</div><h2>شايفه؟</h2><p>المكان نفسه… بس إنت مش نفس الشخص اللي دخله.</p><button class="btn" onclick="show('a');document.getElementById('film').classList.remove('on')">رجوع</button></div></section>
-<script>
-(function(){
- let clicks=0,last=0;
- addEventListener('dblclick',()=>{
-   const now=Date.now();
-   if(now-last<900) clicks++; else clicks=1;
-   last=now;
-   if(clicks>=3){
-     clicks=0;
-     const f=document.getElementById('film');f.classList.add('on');
-     setTimeout(()=>{f.classList.remove('on');show('i')},2400);
-   }
- });
-})();
-</script>
+      <div class="portal"></div>
 
-<div id="cursor"></div>
-<script>
-(function(){
- const c=document.getElementById('cursor');
- addEventListener('pointermove',e=>{c.style.left=e.clientX+'px';c.style.top=e.clientY+'px'});
- addEventListener('pointerdown',()=>c.classList.add('big'));
- addEventListener('pointerup',()=>c.classList.remove('big'));
-})();
-</script>
-</body></html>
+      <button onclick="goTo('choice')">
+        ابدأ الرحلة ←
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- الاختيار -->
+
+  <section class="screen" id="choice">
+
+    <div class="content">
+
+      <div class="small">
+        THE FIRST DOOR
+      </div>
+
+      <h2>
+        اختار أول إحساس جالك.
+      </h2>
+
+      <p>
+        مفيش إجابة صح أو غلط.
+      </p>
+
+      <div class="choices">
+
+        <button
+          class="choice"
+          onclick="choose('light')">
+          ☀️ النور
+        </button>
+
+        <button
+          class="choice"
+          onclick="choose('silence')">
+          ◌ السكوت
+        </button>
+
+        <button
+          class="choice"
+          onclick="choose('fear')">
+          ⌁ الخوف
+        </button>
+
+        <button
+          class="choice"
+          onclick="choose('curiosity')">
+          ✦ الفضول
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- النتيجة -->
+
+  <section class="screen" id="result">
+
+    <div class="content">
+
+      <div
+        class="symbol"
+        id="symbol">
+        ✦
+      </div>
+
+      <div class="small">
+        UNKNOWN
+      </div>
+
+      <h2 id="resultTitle">
+        ...
+      </h2>
+
+      <p id="resultText">
+        ...
+      </p>
+
+      <button onclick="goTo('second')">
+        افتح الباب التالي
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- المرحلة الثانية -->
+
+  <section class="screen" id="second">
+
+    <div class="content">
+
+      <div class="small">
+        ONE LAST THING
+      </div>
+
+      <h2>
+        قبل النهاية...
+      </h2>
+
+      <p>
+        اختار كلمة واحدة فقط.<br>
+        متفكرش.
+      </p>
+
+      <div class="choices">
+
+        <button
+          class="choice"
+          onclick="finish('now')">
+          الآن
+        </button>
+
+        <button
+          class="choice"
+          onclick="finish('later')">
+          بعدين
+        </button>
+
+        <button
+          class="choice"
+          onclick="finish('always')">
+          دائمًا
+        </button>
+
+        <button
+          class="choice"
+          onclick="finish('never')">
+          أبدًا
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- النهاية -->
+
+  <section class="screen final" id="final">
+
+    <div class="content">
+
+      <div class="small">
+        UNKNOWN / FINAL
+      </div>
+
+      <div class="symbol">
+        ∞
+      </div>
+
+      <h1 id="finalTitle">
+        ...
+      </h1>
+
+      <p id="finalText">
+        ...
+      </p>
+
+      <button onclick="goTo('start')">
+        ↻ ابدأ من جديد
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <script>
+
+    /* =========================
+       خلفية النجوم
+    ========================= */
+
+    const canvas =
+      document.getElementById("space");
+
+    const ctx =
+      canvas.getContext("2d");
+
+    let width;
+    let height;
+
+    let stars = [];
+
+
+    function resize() {
+
+      width =
+        canvas.width =
+        window.innerWidth *
+        window.devicePixelRatio;
+
+      height =
+        canvas.height =
+        window.innerHeight *
+        window.devicePixelRatio;
+
+
+      stars = [];
+
+
+      for (
+        let i = 0;
+        i < 450;
+        i++
+      ) {
+
+        stars.push({
+
+          x: Math.random() * width,
+
+          y: Math.random() * height,
+
+          size:
+            Math.random() * 2 + 0.2,
+
+          speed:
+            Math.random() * 1.5 + 0.2
+
+        });
+
+      }
+
+    }
+
+
+    window.addEventListener(
+      "resize",
+      resize
+    );
+
+
+    resize();
+
+
+    function animate() {
+
+      ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+
+      const gradient =
+        ctx.createRadialGradient(
+          width * 0.5,
+          height * 0.5,
+          0,
+
+          width * 0.5,
+          height * 0.5,
+          Math.max(width, height)
+        );
+
+
+      gradient.addColorStop(
+        0,
+        "#17102d"
+      );
+
+      gradient.addColorStop(
+        0.5,
+        "#060617"
+      );
+
+      gradient.addColorStop(
+        1,
+        "#000107"
+      );
+
+
+      ctx.fillStyle = gradient;
+
+      ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+
+      stars.forEach(star => {
+
+        star.y -= star.speed;
+
+
+        if (star.y < 0) {
+
+          star.y = height;
+
+        }
+
+
+        ctx.globalAlpha =
+          0.2 +
+          Math.random() * 0.6;
+
+
+        ctx.fillStyle = "#ffffff";
+
+
+        ctx.fillRect(
+          star.x,
+          star.y,
+          star.size,
+          star.size
+        );
+
+      });
+
+
+      ctx.globalAlpha = 1;
+
+
+      requestAnimationFrame(
+        animate
+      );
+
+    }
+
+
+    animate();
+
+
+    /* =========================
+       التنقل
+    ========================= */
+
+    function goTo(id) {
+
+      const screens =
+        document.querySelectorAll(
+          ".screen"
+        );
+
+
+      screens.forEach(screen => {
+
+        screen.classList.remove(
+          "active"
+        );
+
+      });
+
+
+      const target =
+        document.getElementById(id);
+
+
+      target.classList.add(
+        "active"
+      );
+
+    }
+
+
+    /* =========================
+       الاختيار الأول
+    ========================= */
+
+    function choose(type) {
+
+      const data = {
+
+        light: {
+
+          title:
+            "النور اختارك.",
+
+          text:
+            "يمكن لأنك طول الوقت بتدور على حاجة واضحة وسط كل ده. بس مش كل نور بيكشف الحقيقة.",
+
+          symbol:
+            "☀️"
+
+        },
+
+
+        silence: {
+
+          title:
+            "إنت سمعت السكوت.",
+
+          text:
+            "وده نادر. لأن أغلب الناس بتخاف من اللحظة اللي مفيهاش صوت.",
+
+          symbol:
+            "◌"
+
+        },
+
+
+        fear: {
+
+          title:
+            "الخوف دخل قبلك.",
+
+          text:
+            "بس الغريب؟ إنك كملت رغم وجوده. يمكن دي كانت الإجابة من البداية.",
+
+          symbol:
+            "⌁"
+
+        },
+
+
+        curiosity: {
+
+          title:
+            "الفضول كسب.",
+
+          text:
+            "وده أخطر اختيار في الرحلة دي كلها… لأنه مبيسمحلكش ترجع زي ما كنت.",
+
+          symbol:
+            "✦"
+
+        }
+
+      };
+
+
+      const result =
+        data[type];
+
+
+      document.getElementById(
+        "resultTitle"
+      ).textContent =
+        result.title;
+
+
+      document.getElementById(
+        "resultText"
+      ).textContent =
+        result.text;
+
+
+      document.getElementById(
+        "symbol"
+      ).textContent =
+        result.symbol;
+
+
+      goTo("result");
+
+    }
+
+
+    /* =========================
+       النهاية
+    ========================= */
+
+    function finish(type) {
+
+      const endings = {
+
+        now: {
+
+          title:
+            "دلوقتي.",
+
+          text:
+            "كل حاجة مهمة حصلت لما بطلت تستنى."
+
+        },
+
+
+        later: {
+
+          title:
+            "بعدين.",
+
+          text:
+            "أحيانًا التأجيل مش هروب… أحيانًا هو وقتك الحقيقي."
+
+        },
+
+
+        always: {
+
+          title:
+            "دائمًا.",
+
+          text:
+            "بعض الحكايات مبتنتهيش، حتى لما الصفحة تقفل."
+
+        },
+
+
+        never: {
+
+          title:
+            "أبدًا.",
+
+          text:
+            "يمكن بعض الأبواب اتعملت عشان تتساب مقفولة."
+
+        }
+
+      };
+
+
+      const ending =
+        endings[type];
+
+
+      document.getElementById(
+        "finalTitle"
+      ).textContent =
+        ending.title;
+
+
+      document.getElementById(
+        "finalText"
+      ).textContent =
+        ending.text;
+
+
+      goTo("final");
+
+    }
+
+  </script>
+
+</body>
+  </html>
