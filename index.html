@@ -14,6 +14,10 @@ section{position:fixed;inset:0;display:none;z-index:2;align-items:center;justify
 .glitch{animation:glitch .12s steps(2) 5}@keyframes glitch{50%{transform:translate(4px,-2px);filter:hue-rotate(60deg)}}
 .final{background:radial-gradient(circle at center,#170d2b 0,#03030b 45%,#000 100%)}.final h1{font-size:clamp(50px,12vw,125px)}
 @media(max-width:600px){.choices{grid-template-columns:1fr}.portal{width:155px;height:235px}}
+
+.signal{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:150px;height:4px;border-radius:8px;background:#ffffff12;overflow:hidden;opacity:.5}
+.signal i{display:block;width:0;height:100%;background:#c18bff}
+.holdhint{position:absolute;bottom:7px;width:100%;font-size:9px;color:#777;letter-spacing:2px}
 </style></head>
 <body>
 <canvas id="c"></canvas><div class="shade"></div>
@@ -49,5 +53,30 @@ function wake(){
  idle=setTimeout(()=>document.getElementById('ambient').style.opacity='0',1800);
 }
 ['pointermove','touchstart','click'].forEach(e=>addEventListener(e,wake,{passive:true}));
+</script>
+
+<section id="g" class="final"><div class="wrap fade"><div class="eyebrow">UNKNOWN / 07</div><div class="letter">✧</div><h2>لقيتها.</h2><p>مش كل الأسرار معمولة عشان تتشاف.<br>بعضها بس بيأكدلك إنك كنت بتدور في المكان الصح.</p><button class="btn" onclick="show('a')">ابدأ من جديد</button></div></section>
+<script>
+(function(){
+ const e=document.getElementById('f'); if(!e)return;
+ let timer,bar;
+ function begin(){
+   clearInterval(timer);
+   let progress=0;
+   bar=document.createElement('div');
+   bar.className='signal';
+   bar.innerHTML='<i></i><div class="holdhint">لا تترك الزر...</div>';
+   e.appendChild(bar);
+   timer=setInterval(function(){
+     progress+=2;
+     bar.querySelector('i').style.width=progress+'%';
+     if(progress>=100){clearInterval(timer);show('g');bar.remove();bar=null;}
+   },45);
+ }
+ function cancel(){clearInterval(timer);if(bar){bar.remove();bar=null;}}
+ e.addEventListener('pointerdown',begin);
+ e.addEventListener('pointerup',cancel);
+ e.addEventListener('pointerleave',cancel);
+})();
 </script>
 </body></html>
