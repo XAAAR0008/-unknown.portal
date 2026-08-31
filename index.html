@@ -18,6 +18,11 @@ section{position:fixed;inset:0;display:none;z-index:2;align-items:center;justify
 .signal{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:150px;height:4px;border-radius:8px;background:#ffffff12;overflow:hidden;opacity:.5}
 .signal i{display:block;width:0;height:100%;background:#c18bff}
 .holdhint{position:absolute;bottom:7px;width:100%;font-size:9px;color:#777;letter-spacing:2px}
+
+.secretGlow{position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),#b477ff18,transparent 18%);z-index:7;transition:background .15s}
+.tapdots{position:fixed;inset:0;z-index:6;pointer-events:none}
+.tapdot{position:absolute;width:5px;height:5px;border-radius:50%;background:#d5b4ff;box-shadow:0 0 18px #b477ff;animation:dot .8s forwards}
+@keyframes dot{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(7)}}
 </style></head>
 <body>
 <canvas id="c"></canvas><div class="shade"></div>
@@ -77,6 +82,32 @@ function wake(){
  e.addEventListener('pointerdown',begin);
  e.addEventListener('pointerup',cancel);
  e.addEventListener('pointerleave',cancel);
+})();
+</script>
+
+<div class="secretGlow" id="glow"></div><div class="tapdots" id="dots"></div>
+<script>
+(function(){
+ const glow=document.getElementById('glow'), dots=document.getElementById('dots');
+ addEventListener('pointermove',e=>{
+   glow.style.setProperty('--mx',e.clientX+'px');
+   glow.style.setProperty('--my',e.clientY+'px');
+ });
+ let taps=0,last=0;
+ addEventListener('pointerdown',e=>{
+   const now=Date.now();
+   taps=(now-last<650)?taps+1:1; last=now;
+   if(taps>=7){
+     taps=0;
+     const d=document.createElement('div'); d.className='tapdot';
+     d.style.left=e.clientX+'px'; d.style.top=e.clientY+'px'; dots.appendChild(d);
+     setTimeout(()=>d.remove(),900);
+     const target=document.getElementById('g');
+     if(target && !target.classList.contains('on')){
+       setTimeout(()=>show('g'),350);
+     }
+   }
+ });
 })();
 </script>
 </body></html>
