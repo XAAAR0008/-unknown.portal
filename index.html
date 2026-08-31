@@ -23,6 +23,12 @@ section{position:fixed;inset:0;display:none;z-index:2;align-items:center;justify
 .tapdots{position:fixed;inset:0;z-index:6;pointer-events:none}
 .tapdot{position:absolute;width:5px;height:5px;border-radius:50%;background:#d5b4ff;box-shadow:0 0 18px #b477ff;animation:dot .8s forwards}
 @keyframes dot{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(7)}}
+
+#veil{position:fixed;inset:0;background:#000;z-index:99;opacity:0;pointer-events:none;transition:opacity .7s}
+#veil.on{opacity:1}
+.alt{position:fixed;inset:0;background:radial-gradient(circle,#120a25,#000 70%);z-index:50;display:none;align-items:center;justify-content:center;text-align:center}
+.alt.on{display:flex;animation:altin 1.2s both}
+@keyframes altin{from{opacity:0;filter:blur(12px)}to{opacity:1;filter:none}}
 </style></head>
 <body>
 <canvas id="c"></canvas><div class="shade"></div>
@@ -108,6 +114,30 @@ function wake(){
      }
    }
  });
+})();
+</script>
+
+<div id="veil"></div>
+<section id="h" class="alt"><div class="wrap fade"><div class="eyebrow">UNKNOWN / ?</div><div class="letter">☽</div><h2>لسه صاحي؟</h2><p>يبقى إنت من القليل اللي وصلوا هنا.<br>خلي السر معاك.</p><button class="btn" onclick="show('a');document.getElementById('veil').classList.remove('on')">ارجع</button></div></section>
+<script>
+(function(){
+ let seq=[],timer;
+ const target=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight'];
+ addEventListener('keydown',e=>{
+   seq.push(e.key); if(seq.length>target.length)seq.shift();
+   if(target.every((k,i)=>seq[i]===k)){
+     const v=document.getElementById('veil'); v.classList.add('on');
+     setTimeout(()=>show('h'),650); seq=[];
+   }
+ });
+ // A gentle pause when returning to the opening screen.
+ const oldShow=window.show;
+ window.show=function(id){
+   oldShow(id);
+   if(id==='a'){
+     document.title='UNKNOWN — The Other Side';
+   }
+ };
 })();
 </script>
 </body></html>
