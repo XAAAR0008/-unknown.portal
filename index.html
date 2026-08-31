@@ -1,810 +1,1813 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
-  <title>UNKNOWN</title>
+<title>UNKNOWN — V12</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
 
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
 
-    body {
-      font-family: Arial, sans-serif;
-      color: white;
-      background: #02030b;
-    }
+body{
+  font-family:Arial,Tahoma,sans-serif;
+  color:#fff;
+  background:#010108;
+  user-select:none;
+}
 
-    canvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-    }
+/* =========================
+   SPACE
+========================= */
 
-    .overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      background:
-        radial-gradient(
-          circle at center,
-          transparent 5%,
-          rgba(10, 5, 25, 0.35) 45%,
-          rgba(0, 0, 0, 0.9) 100%
-        );
-    }
+canvas{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+}
 
-    .screen {
-      position: fixed;
-      inset: 0;
-      z-index: 2;
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
 
-      display: none;
-      align-items: center;
-      justify-content: center;
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(130,65,220,.12),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at center,
+      transparent 15%,
+      rgba(0,0,0,.25) 55%,
+      rgba(0,0,0,.92) 100%
+    );
+}
 
-      padding: 25px;
-      text-align: center;
-    }
+.vignette{
+  position:fixed;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
 
-    .screen.active {
-      display: flex;
-      animation: appear 0.8s ease;
-    }
+  box-shadow:
+    inset 0 0 150px rgba(0,0,0,.92);
+}
 
-    @keyframes appear {
-      from {
-        opacity: 0;
-        transform: scale(1.04);
-      }
+/* =========================
+   TOP
+========================= */
 
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
+.top{
+  position:fixed;
+  top:17px;
+  left:18px;
+  right:18px;
 
-    .content {
-      width: min(750px, 94vw);
-    }
+  z-index:30;
 
-    .small {
-      color: #b98cff;
-      font-size: 11px;
-      letter-spacing: 5px;
-      margin-bottom: 20px;
-    }
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
 
-    h1 {
-      font-size: clamp(48px, 10vw, 100px);
-      line-height: 1;
-      margin-bottom: 20px;
+.logo{
+  font-size:9px;
+  letter-spacing:5px;
+  color:#c7a0ff;
+  opacity:.75;
+}
 
-      text-shadow:
-        0 0 20px rgba(170, 100, 255, 0.5),
-        0 0 60px rgba(130, 70, 255, 0.3);
-    }
+.progressBox{
+  width:120px;
+  height:4px;
 
-    h2 {
-      font-size: clamp(30px, 6vw, 60px);
-      margin-bottom: 15px;
-    }
+  border-radius:20px;
+  overflow:hidden;
 
-    p {
-      color: #bdb8ca;
-      font-size: 16px;
-      line-height: 2;
-      margin-bottom: 25px;
-    }
+  background:rgba(255,255,255,.08);
+}
 
-    .portal {
-      width: 190px;
-      height: 300px;
+.progress{
+  width:7%;
+  height:100%;
 
-      margin: 30px auto;
+  background:
+    linear-gradient(
+      90deg,
+      #6c34b5,
+      #ddbaff
+    );
 
-      border: 2px solid rgba(190, 140, 255, 0.7);
-      border-radius: 50%;
+  box-shadow:
+    0 0 15px rgba(190,120,255,.85);
 
-      position: relative;
-      overflow: hidden;
+  transition:
+    width .8s cubic-bezier(.2,.8,.2,1);
+}
 
-      box-shadow:
-        0 0 20px rgba(160, 90, 255, 0.7),
-        0 0 100px rgba(110, 50, 220, 0.3),
-        inset 0 0 50px rgba(160, 90, 255, 0.4);
-    }
+/* =========================
+   SCREEN
+========================= */
 
-    .portal::before {
-      content: "";
+.screen{
+  position:fixed;
+  inset:0;
 
-      position: absolute;
-      inset: 8px;
+  z-index:5;
 
-      border-radius: 50%;
+  display:none;
 
-      background:
-        radial-gradient(
-          circle at 50% 70%,
-          rgba(240, 210, 255, 0.9),
-          rgba(120, 60, 190, 0.5) 20%,
-          rgba(5, 3, 18, 1) 65%
-        );
+  align-items:center;
+  justify-content:center;
 
-      animation: breathe 3s ease-in-out infinite;
-    }
+  padding:48px 20px 25px;
 
-    @keyframes breathe {
-      50% {
-        transform: scale(1.05);
-        filter: brightness(1.5);
-      }
-    }
+  text-align:center;
+}
 
-    button {
-      border: 1px solid rgba(180, 120, 255, 0.6);
+.screen.active{
+  display:flex;
 
-      background: rgba(255, 255, 255, 0.05);
+  animation:
+    screenIn .85s cubic-bezier(.2,.8,.2,1);
+}
 
-      color: white;
+@keyframes screenIn{
+  from{
+    opacity:0;
+    transform:scale(1.04);
+    filter:blur(9px);
+  }
 
-      border-radius: 50px;
+  to{
+    opacity:1;
+    transform:scale(1);
+    filter:blur(0);
+  }
+}
 
-      padding: 14px 30px;
+.content{
+  width:min(760px,94vw);
+}
 
-      font-size: 16px;
-      font-weight: bold;
+/* =========================
+   TEXT
+========================= */
 
-      cursor: pointer;
+.small{
+  color:#c19aff;
 
-      transition: 0.3s;
+  font-size:9px;
 
-      backdrop-filter: blur(10px);
-    }
+  letter-spacing:5px;
 
-    button:hover {
-      transform: translateY(-3px);
+  margin-bottom:20px;
+}
 
-      box-shadow:
-        0 0 30px rgba(160, 90, 255, 0.4);
-    }
+h1{
+  font-size:clamp(45px,11vw,105px);
 
-    .choices {
-      display: grid;
+  line-height:1;
 
-      grid-template-columns: repeat(2, 1fr);
+  margin-bottom:20px;
 
-      gap: 15px;
+  text-shadow:
+    0 0 25px rgba(190,120,255,.65),
+    0 0 90px rgba(120,50,255,.4);
+}
 
-      margin-top: 30px;
-    }
+h2{
+  font-size:clamp(28px,6vw,60px);
 
-    .choice {
-      min-height: 85px;
+  line-height:1.15;
 
-      border-radius: 20px;
+  margin-bottom:18px;
 
-      font-size: 15px;
-    }
+  text-shadow:
+    0 0 25px rgba(190,120,255,.35);
+}
 
-    .symbol {
-      font-size: 70px;
+p{
+  color:#c4bfce;
 
-      margin-bottom: 10px;
+  font-size:16px;
 
-      text-shadow:
-        0 0 30px rgba(190, 120, 255, 0.8);
-    }
+  line-height:2;
 
-    .final {
-      background:
-        radial-gradient(
-          circle at center,
-          #160b2d,
-          #03030b 55%,
-          #000 100%
-        );
-    }
+  margin-bottom:27px;
+}
 
-    .final h1 {
-      font-size: clamp(55px, 12vw, 120px);
-    }
+/* =========================
+   PORTAL
+========================= */
 
-    @media (max-width: 600px) {
+.portalArea{
+  width:210px;
+  height:310px;
 
-      .choices {
-        grid-template-columns: 1fr;
-      }
+  margin:25px auto 35px;
 
-      .portal {
-        width: 150px;
-        height: 240px;
-      }
+  position:relative;
 
-      p {
-        font-size: 14px;
-      }
-    }
-  </style>
+  cursor:pointer;
+}
+
+.portal{
+  position:absolute;
+  inset:0;
+
+  border:
+    1px solid rgba(215,175,255,.85);
+
+  border-radius:50%;
+
+  box-shadow:
+    0 0 25px rgba(170,100,255,.8),
+    0 0 110px rgba(100,40,220,.38),
+    inset 0 0 65px rgba(170,90,255,.45);
+
+  animation:
+    portalFloat 4s ease-in-out infinite;
+}
+
+.portal:before{
+  content:"";
+
+  position:absolute;
+
+  inset:11px;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle at 50% 68%,
+      #fff,
+      #e5c8ff 5%,
+      rgba(185,105,250,.75) 17%,
+      rgba(70,25,120,.85) 38%,
+      #02010d 72%
+    );
+
+  box-shadow:
+    inset 0 0 50px rgba(210,140,255,.95);
+
+  animation:
+    corePulse 3s ease-in-out infinite;
+}
+
+.portal:after{
+  content:"";
+
+  position:absolute;
+
+  inset:-20px;
+
+  border-radius:50%;
+
+  border:1px solid rgba(190,120,255,.18);
+
+  border-top-color:
+    rgba(235,200,255,.8);
+
+  animation:
+    spin 9s linear infinite;
+}
+
+.portalHint{
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:-29px;
+
+  color:#9f86bd;
+
+  font-size:10px;
+
+  letter-spacing:2px;
+}
+
+@keyframes portalFloat{
+  50%{
+    transform:translateY(-10px);
+  }
+}
+
+@keyframes corePulse{
+  50%{
+    transform:scale(1.05);
+    filter:brightness(1.5);
+  }
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+button{
+  position:relative;
+
+  overflow:hidden;
+
+  border:
+    1px solid rgba(195,145,255,.58);
+
+  background:
+    rgba(255,255,255,.045);
+
+  color:#fff;
+
+  border-radius:50px;
+
+  padding:15px 31px;
+
+  font-size:16px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+  backdrop-filter:blur(12px);
+
+  transition:.3s ease;
+}
+
+button:before{
+  content:"";
+
+  position:absolute;
+
+  top:0;
+  left:-120%;
+
+  width:80%;
+  height:100%;
+
+  transform:skewX(-20deg);
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.2),
+      transparent
+    );
+
+  transition:.7s;
+}
+
+button:hover:before{
+  left:140%;
+}
+
+button:hover{
+  transform:translateY(-3px);
+
+  border-color:
+    rgba(225,190,255,.95);
+
+  box-shadow:
+    0 0 30px rgba(160,90,255,.4);
+}
+
+button:active{
+  transform:scale(.95);
+}
+
+/* =========================
+   CHOICES
+========================= */
+
+.choices{
+  display:grid;
+
+  grid-template-columns:
+    repeat(2,1fr);
+
+  gap:13px;
+
+  margin-top:25px;
+}
+
+.choice{
+  min-height:88px;
+
+  border-radius:22px;
+
+  font-size:15px;
+
+  transition:
+    transform .3s,
+    background .3s,
+    box-shadow .3s;
+}
+
+.choice:hover{
+  background:
+    rgba(160,90,255,.1);
+
+  box-shadow:
+    0 0 25px rgba(130,70,220,.2);
+}
+
+/* =========================
+   SYMBOL
+========================= */
+
+.symbol{
+  font-size:78px;
+
+  margin-bottom:10px;
+
+  animation:
+    float 3s ease-in-out infinite;
+
+  text-shadow:
+    0 0 30px rgba(215,155,255,.9),
+    0 0 80px rgba(130,60,255,.55);
+}
+
+@keyframes float{
+  50%{
+    transform:
+      translateY(-9px)
+      scale(1.05);
+  }
+}
+
+/* =========================
+   SECRET
+========================= */
+
+.secret{
+  position:fixed;
+
+  inset:0;
+
+  z-index:60;
+
+  display:none;
+
+  align-items:center;
+  justify-content:center;
+
+  padding:22px;
+
+  background:
+    rgba(0,0,0,.9);
+
+  backdrop-filter:
+    blur(18px);
+
+  text-align:center;
+}
+
+.secret.show{
+  display:flex;
+
+  animation:
+    secretIn .8s ease;
+}
+
+.secretBox{
+  width:min(510px,92vw);
+
+  padding:45px 25px;
+
+  border:
+    1px solid rgba(200,145,255,.45);
+
+  border-radius:30px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(35,15,65,.8),
+      rgba(8,5,20,.9)
+    );
+
+  box-shadow:
+    0 0 100px rgba(120,50,220,.3);
+}
+
+.secretIcon{
+  font-size:65px;
+
+  margin-bottom:18px;
+
+  text-shadow:
+    0 0 35px rgba(210,150,255,.8);
+}
+
+@keyframes secretIn{
+  from{
+    opacity:0;
+    transform:scale(.9);
+  }
+
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+/* =========================
+   FINAL
+========================= */
+
+.final{
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(35,12,75,.8),
+      rgba(3,2,12,.82) 55%,
+      #000 100%
+    );
+}
+
+.final h1{
+  font-size:
+    clamp(58px,14vw,130px);
+
+  animation:
+    glow 3s ease-in-out infinite;
+}
+
+@keyframes glow{
+  50%{
+    text-shadow:
+      0 0 40px rgba(220,170,255,.9),
+      0 0 120px rgba(130,60,255,.6);
+  }
+}
+
+/* =========================
+   PARTICLES
+========================= */
+
+.particle{
+  position:fixed;
+
+  z-index:90;
+
+  pointer-events:none;
+
+  font-size:17px;
+
+  animation:
+    particleFly 1.5s ease-out forwards;
+}
+
+@keyframes particleFly{
+
+  from{
+    transform:
+      translate(0,0)
+      scale(.5);
+
+    opacity:1;
+  }
+
+  to{
+    transform:
+      translate(
+        var(--x),
+        var(--y)
+      )
+      rotate(
+        var(--r)
+      )
+      scale(1.5);
+
+    opacity:0;
+  }
+
+}
+
+/* =========================
+   FLASH
+========================= */
+
+.flash{
+  position:fixed;
+  inset:0;
+
+  z-index:100;
+
+  pointer-events:none;
+
+  background:#fff;
+
+  opacity:0;
+}
+
+.flash.go{
+  animation:
+    flash .55s ease;
+}
+
+@keyframes flash{
+  0%{opacity:0}
+  20%{opacity:.18}
+  100%{opacity:0}
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:600px){
+
+  .top{
+    top:13px;
+    left:14px;
+    right:14px;
+  }
+
+  .logo{
+    font-size:8px;
+    letter-spacing:3px;
+  }
+
+  .progressBox{
+    width:75px;
+  }
+
+  .screen{
+    padding:
+      44px 16px 20px;
+  }
+
+  .portalArea{
+    width:150px;
+    height:230px;
+
+    margin:
+      18px auto 30px;
+  }
+
+  p{
+    font-size:14px;
+    line-height:1.9;
+  }
+
+  .choices{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+
+  .choice{
+    min-height:64px;
+  }
+
+  button{
+    padding:
+      13px 25px;
+
+    font-size:15px;
+  }
+
+  .symbol{
+    font-size:62px;
+  }
+}
+
+@media(max-height:680px){
+
+  .portalArea{
+    width:115px;
+    height:175px;
+
+    margin:
+      8px auto 24px;
+  }
+
+  .small{
+    margin-bottom:10px;
+  }
+
+  p{
+    margin-bottom:14px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <canvas id="space"></canvas>
+<canvas id="space"></canvas>
 
-  <div class="overlay"></div>
+<div class="overlay"></div>
+<div class="vignette"></div>
+
+<div class="flash" id="flash"></div>
 
 
-  <!-- البداية -->
+<!-- TOP -->
 
-  <section class="screen active" id="start">
+<div class="top">
 
-    <div class="content">
+  <div class="logo">
+    UNKNOWN / V12
+  </div>
 
-      <div class="small">
-        WELCOME TO THE UNKNOWN
-      </div>
+  <div class="progressBox">
+    <div
+      class="progress"
+      id="progress">
+    </div>
+  </div>
 
-      <h1>
-        قبل ما تدخل...
-      </h1>
+</div>
 
-      <p>
-        خد نفس.<br>
-        وسيب العالم برّه.
-      </p>
+
+<!-- START -->
+
+<section
+  class="screen active"
+  id="start">
+
+  <div class="content">
+
+    <div class="small">
+      WELCOME TO THE UNKNOWN
+    </div>
+
+    <h1>
+      قبل ما تدخل...
+    </h1>
+
+    <p>
+      خد نفس.<br>
+      وسيب العالم برّه.
+    </p>
+
+    <div
+      class="portalArea"
+      onclick="portalTouch()">
 
       <div class="portal"></div>
 
-      <button onclick="goTo('choice')">
-        ابدأ الرحلة ←
+      <div class="portalHint">
+        اضغط على البوابة 3 مرات
+      </div>
+
+    </div>
+
+    <button
+      onclick="startJourney()">
+      ابدأ الرحلة ←
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- CHOICE -->
+
+<section
+  class="screen"
+  id="choice">
+
+  <div class="content">
+
+    <div class="small">
+      THE FIRST DOOR
+    </div>
+
+    <h2>
+      اختار أول إحساس جالك.
+    </h2>
+
+    <p>
+      مفيش إجابة صح أو غلط.<br>
+      أول إحساس غالبًا هو الصح.
+    </p>
+
+    <div class="choices">
+
+      <button
+        class="choice"
+        onclick="choose('light')">
+        ☀️ النور
+      </button>
+
+      <button
+        class="choice"
+        onclick="choose('silence')">
+        ◌ السكوت
+      </button>
+
+      <button
+        class="choice"
+        onclick="choose('fear')">
+        ⌁ الخوف
+      </button>
+
+      <button
+        class="choice"
+        onclick="choose('curiosity')">
+        ✦ الفضول
       </button>
 
     </div>
 
-  </section>
+  </div>
+
+</section>
 
 
-  <!-- الاختيار -->
+<!-- RESULT -->
 
-  <section class="screen" id="choice">
+<section
+  class="screen"
+  id="result">
 
-    <div class="content">
+  <div class="content">
 
-      <div class="small">
-        THE FIRST DOOR
-      </div>
-
-      <h2>
-        اختار أول إحساس جالك.
-      </h2>
-
-      <p>
-        مفيش إجابة صح أو غلط.
-      </p>
-
-      <div class="choices">
-
-        <button
-          class="choice"
-          onclick="choose('light')">
-          ☀️ النور
-        </button>
-
-        <button
-          class="choice"
-          onclick="choose('silence')">
-          ◌ السكوت
-        </button>
-
-        <button
-          class="choice"
-          onclick="choose('fear')">
-          ⌁ الخوف
-        </button>
-
-        <button
-          class="choice"
-          onclick="choose('curiosity')">
-          ✦ الفضول
-        </button>
-
-      </div>
-
+    <div
+      class="symbol"
+      id="symbol">
+      ✦
     </div>
 
-  </section>
+    <div class="small">
+      THE ANSWER
+    </div>
+
+    <h2
+      id="resultTitle">
+      ...
+    </h2>
+
+    <p
+      id="resultText">
+      ...
+    </p>
+
+    <button
+      onclick="openSecret()">
+      كمّل...
+    </button>
+
+  </div>
+
+</section>
 
 
-  <!-- النتيجة -->
+<!-- SECOND -->
 
-  <section class="screen" id="result">
+<section
+  class="screen"
+  id="second">
 
-    <div class="content">
+  <div class="content">
 
-      <div
-        class="symbol"
-        id="symbol">
-        ✦
-      </div>
+    <div class="small">
+      ONE LAST THING
+    </div>
 
-      <div class="small">
-        UNKNOWN
-      </div>
+    <h2>
+      قبل النهاية...
+    </h2>
 
-      <h2 id="resultTitle">
-        ...
-      </h2>
+    <p>
+      اختار كلمة واحدة فقط.<br>
+      متفكرش.
+    </p>
 
-      <p id="resultText">
-        ...
-      </p>
+    <div class="choices">
 
-      <button onclick="goTo('second')">
-        افتح الباب التالي
+      <button
+        class="choice"
+        onclick="finish('now')">
+        الآن
+      </button>
+
+      <button
+        class="choice"
+        onclick="finish('later')">
+        بعدين
+      </button>
+
+      <button
+        class="choice"
+        onclick="finish('always')">
+        دائمًا
+      </button>
+
+      <button
+        class="choice"
+        onclick="finish('never')">
+        أبدًا
       </button>
 
     </div>
 
-  </section>
+  </div>
+
+</section>
 
 
-  <!-- المرحلة الثانية -->
+<!-- SECRET -->
 
-  <section class="screen" id="second">
+<div
+  class="secret"
+  id="secret">
 
-    <div class="content">
+  <div class="secretBox">
 
-      <div class="small">
-        ONE LAST THING
-      </div>
-
-      <h2>
-        قبل النهاية...
-      </h2>
-
-      <p>
-        اختار كلمة واحدة فقط.<br>
-        متفكرش.
-      </p>
-
-      <div class="choices">
-
-        <button
-          class="choice"
-          onclick="finish('now')">
-          الآن
-        </button>
-
-        <button
-          class="choice"
-          onclick="finish('later')">
-          بعدين
-        </button>
-
-        <button
-          class="choice"
-          onclick="finish('always')">
-          دائمًا
-        </button>
-
-        <button
-          class="choice"
-          onclick="finish('never')">
-          أبدًا
-        </button>
-
-      </div>
-
+    <div class="secretIcon">
+      🔐
     </div>
 
-  </section>
-
-
-  <!-- النهاية -->
-
-  <section class="screen final" id="final">
-
-    <div class="content">
-
-      <div class="small">
-        UNKNOWN / FINAL
-      </div>
-
-      <div class="symbol">
-        ∞
-      </div>
-
-      <h1 id="finalTitle">
-        ...
-      </h1>
-
-      <p id="finalText">
-        ...
-      </p>
-
-      <button onclick="goTo('start')">
-        ↻ ابدأ من جديد
-      </button>
-
+    <div class="small">
+      SECRET MESSAGE
     </div>
 
-  </section>
+    <h2>
+      وصلت للنقطة اللي مكنش المفروض توصلها.
+    </h2>
+
+    <p>
+      بس بما إنك وصلت...<br>
+      يبقى كمل للآخر.
+    </p>
+
+    <button
+      onclick="closeSecret()">
+      أنا مكمل →
+    </button>
+
+  </div>
+
+</div>
 
 
-  <script>
+<!-- FINAL -->
 
-    /* =========================
-       خلفية النجوم
-    ========================= */
+<section
+  class="screen final"
+  id="final">
 
-    const canvas =
-      document.getElementById("space");
+  <div class="content">
 
-    const ctx =
-      canvas.getContext("2d");
+    <div class="small">
+      UNKNOWN / FINAL
+    </div>
 
-    let width;
-    let height;
+    <div class="symbol">
+      ∞
+    </div>
 
-    let stars = [];
+    <h1
+      id="finalTitle">
+      ...
+    </h1>
+
+    <p
+      id="finalText">
+      ...
+    </p>
+
+    <button
+      onclick="restart()">
+      ↻ ابدأ من جديد
+    </button>
+
+  </div>
+
+</section>
 
 
-    function resize() {
+<script>
 
-      width =
-        canvas.width =
-        window.innerWidth *
-        window.devicePixelRatio;
+/* =====================================
+   SPACE ENGINE
+===================================== */
 
-      height =
-        canvas.height =
-        window.innerHeight *
-        window.devicePixelRatio;
+const canvas =
+  document.getElementById("space");
+
+const ctx =
+  canvas.getContext("2d");
+
+let W=0;
+let H=0;
+
+let stars=[];
+let meteors=[];
+
+const DPR =
+  Math.min(
+    window.devicePixelRatio || 1,
+    2
+  );
 
 
-      stars = [];
+function resize(){
+
+  W=window.innerWidth;
+  H=window.innerHeight;
+
+  canvas.width=W*DPR;
+  canvas.height=H*DPR;
+
+  ctx.setTransform(
+    DPR,0,0,DPR,0,0
+  );
+
+  stars=[];
+
+  const amount =
+    Math.min(
+      500,
+      Math.floor(
+        W*H/4000
+      )
+    );
+
+  for(
+    let i=0;
+    i<amount;
+    i++
+  ){
+
+    stars.push({
+
+      x:Math.random()*W,
+
+      y:Math.random()*H,
+
+      r:Math.random()*1.5+.15,
+
+      speed:
+        Math.random()*.45+.04,
+
+      alpha:
+        Math.random()*.7+.15,
+
+      phase:
+        Math.random()*Math.PI*2
+
+    });
+
+  }
+
+}
+
+window.addEventListener(
+  "resize",
+  resize
+);
+
+resize();
 
 
-      for (
-        let i = 0;
-        i < 450;
-        i++
-      ) {
+function createMeteor(){
 
-        stars.push({
+  if(Math.random()>.006)
+    return;
 
-          x: Math.random() * width,
+  meteors.push({
 
-          y: Math.random() * height,
+    x:Math.random()*W*.7,
 
-          size:
-            Math.random() * 2 + 0.2,
+    y:Math.random()*H*.35,
 
-          speed:
-            Math.random() * 1.5 + 0.2
+    vx:7+Math.random()*8,
 
-        });
+    vy:4+Math.random()*5,
+
+    life:0,
+
+    max:35+Math.random()*30
+
+  });
+
+}
+
+
+function animate(){
+
+  ctx.clearRect(
+    0,
+    0,
+    W,
+    H
+  );
+
+
+  const bg =
+    ctx.createRadialGradient(
+      W*.5,
+      H*.45,
+      0,
+      W*.5,
+      H*.45,
+      Math.max(W,H)
+    );
+
+
+  bg.addColorStop(
+    0,
+    "#1b1036"
+  );
+
+  bg.addColorStop(
+    .45,
+    "#070617"
+  );
+
+  bg.addColorStop(
+    1,
+    "#000107"
+  );
+
+
+  ctx.fillStyle=bg;
+
+  ctx.fillRect(
+    0,
+    0,
+    W,
+    H
+  );
+
+
+  stars.forEach(
+    s=>{
+
+      s.y-=s.speed;
+
+      s.phase+=.018;
+
+      if(s.y<0){
+
+        s.y=H;
+
+        s.x=Math.random()*W;
+
+      }
+
+
+      ctx.globalAlpha=
+        Math.max(
+          .04,
+          s.alpha+
+          Math.sin(s.phase)*.15
+        );
+
+
+      ctx.beginPath();
+
+      ctx.arc(
+        s.x,
+        s.y,
+        s.r,
+        0,
+        Math.PI*2
+      );
+
+      ctx.fillStyle="#fff";
+
+      ctx.fill();
+
+    }
+  );
+
+
+  createMeteor();
+
+
+  meteors.forEach(
+    (m,index)=>{
+
+      m.x+=m.vx;
+      m.y+=m.vy;
+
+      m.life++;
+
+
+      ctx.globalAlpha=
+        1-m.life/m.max;
+
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        m.x,
+        m.y
+      );
+
+      ctx.lineTo(
+        m.x-m.vx*4,
+        m.y-m.vy*4
+      );
+
+      ctx.strokeStyle="#dfc0ff";
+
+      ctx.lineWidth=1.5;
+
+      ctx.stroke();
+
+
+      if(
+        m.life>m.max
+      ){
+
+        meteors.splice(
+          index,
+          1
+        );
 
       }
 
     }
+  );
 
 
-    window.addEventListener(
-      "resize",
-      resize
+  ctx.globalAlpha=1;
+
+  requestAnimationFrame(
+    animate
+  );
+
+}
+
+animate();
+
+
+/* =====================================
+   PROGRESS
+===================================== */
+
+const progress =
+  document.getElementById(
+    "progress"
+  );
+
+
+const progressMap={
+
+  start:"7%",
+
+  choice:"28%",
+
+  result:"52%",
+
+  second:"76%",
+
+  final:"100%"
+
+};
+
+
+function goTo(id){
+
+  document
+    .querySelectorAll(
+      ".screen"
+    )
+    .forEach(
+      s=>
+        s.classList.remove(
+          "active"
+        )
     );
 
 
-    resize();
+  document
+    .getElementById(id)
+    .classList.add(
+      "active"
+    );
 
 
-    function animate() {
+  progress.style.width=
+    progressMap[id] ||
+    "7%";
 
-      ctx.clearRect(
-        0,
-        0,
-        width,
-        height
+
+  flash();
+
+
+  if(
+    navigator.vibrate
+  ){
+
+    navigator.vibrate(
+      18
+    );
+
+  }
+
+}
+
+
+/* =====================================
+   FLASH
+===================================== */
+
+function flash(){
+
+  const f=
+    document.getElementById(
+      "flash"
+    );
+
+  f.classList.remove(
+    "go"
+  );
+
+  void f.offsetWidth;
+
+  f.classList.add(
+    "go"
+  );
+
+}
+
+
+/* =====================================
+   PARTICLES
+===================================== */
+
+function particles(
+  symbol="✦"
+){
+
+  for(
+    let i=0;
+    i<24;
+    i++
+  ){
+
+    const p=
+      document.createElement(
+        "div"
       );
 
 
-      const gradient =
-        ctx.createRadialGradient(
-          width * 0.5,
-          height * 0.5,
-          0,
+    p.className=
+      "particle";
 
-          width * 0.5,
-          height * 0.5,
-          Math.max(width, height)
-        );
+    p.textContent=
+      symbol;
 
 
-      gradient.addColorStop(
-        0,
-        "#17102d"
-      );
-
-      gradient.addColorStop(
-        0.5,
-        "#060617"
-      );
-
-      gradient.addColorStop(
-        1,
-        "#000107"
-      );
+    p.style.left=
+      (
+        50+
+        Math.random()*16-8
+      )+"%";
 
 
-      ctx.fillStyle = gradient;
-
-      ctx.fillRect(
-        0,
-        0,
-        width,
-        height
-      );
+    p.style.top=
+      (
+        50+
+        Math.random()*16-8
+      )+"%";
 
 
-      stars.forEach(star => {
-
-        star.y -= star.speed;
-
-
-        if (star.y < 0) {
-
-          star.y = height;
-
-        }
+    p.style.setProperty(
+      "--x",
+      (
+        Math.random()*300-150
+      )+"px"
+    );
 
 
-        ctx.globalAlpha =
-          0.2 +
-          Math.random() * 0.6;
+    p.style.setProperty(
+      "--y",
+      (
+        Math.random()*340-170
+      )+"px"
+    );
 
 
-        ctx.fillStyle = "#ffffff";
+    p.style.setProperty(
+      "--r",
+      (
+        Math.random()*720-360
+      )+"deg"
+    );
 
 
-        ctx.fillRect(
-          star.x,
-          star.y,
-          star.size,
-          star.size
-        );
-
-      });
+    document.body.appendChild(
+      p
+    );
 
 
-      ctx.globalAlpha = 1;
+    setTimeout(
+      ()=>p.remove(),
+      1600
+    );
+
+  }
+
+}
 
 
-      requestAnimationFrame(
-        animate
-      );
+/* =====================================
+   START
+===================================== */
+
+function startJourney(){
+
+  particles("✦");
+
+  setTimeout(
+    ()=>{
+      goTo("choice");
+    },
+    250
+  );
+
+}
+
+
+/* =====================================
+   PORTAL
+===================================== */
+
+let portalClicks=0;
+
+
+function portalTouch(){
+
+  portalClicks++;
+
+
+  particles(
+    portalClicks%2
+      ?"✦"
+      :"✧"
+  );
+
+
+  if(
+    navigator.vibrate
+  ){
+
+    navigator.vibrate(
+      [15,30,15]
+    );
+
+  }
+
+
+  if(
+    portalClicks>=3
+  ){
+
+    portalClicks=0;
+
+    startJourney();
+
+  }
+
+}
+
+
+/* =====================================
+   FIRST CHOICE
+===================================== */
+
+let firstChoice="";
+
+
+function choose(type){
+
+  firstChoice=
+    type;
+
+
+  const data={
+
+    light:{
+
+      title:
+        "النور اختارك.",
+
+      text:
+        "يمكن لأنك طول الوقت بتدور على حاجة واضحة وسط كل ده. بس مش كل نور بيكشف الحقيقة.",
+
+      symbol:"☀️"
+
+    },
+
+
+    silence:{
+
+      title:
+        "إنت سمعت السكوت.",
+
+      text:
+        "وده نادر. لأن أغلب الناس بتخاف من اللحظة اللي مفيهاش صوت.",
+
+      symbol:"◌"
+
+    },
+
+
+    fear:{
+
+      title:
+        "الخوف دخل قبلك.",
+
+      text:
+        "بس الغريب؟ إنك كملت رغم وجوده. يمكن دي كانت الإجابة من البداية.",
+
+      symbol:"⌁"
+
+    },
+
+
+    curiosity:{
+
+      title:
+        "الفضول كسب.",
+
+      text:
+        "وده أخطر اختيار في الرحلة دي كلها… لأنه مبيسمحلكش ترجع زي ما كنت.",
+
+      symbol:"✦"
 
     }
 
-
-    animate();
-
-
-    /* =========================
-       التنقل
-    ========================= */
-
-    function goTo(id) {
-
-      const screens =
-        document.querySelectorAll(
-          ".screen"
-        );
+  };
 
 
-      screens.forEach(screen => {
-
-        screen.classList.remove(
-          "active"
-        );
-
-      });
+  const result=
+    data[type];
 
 
-      const target =
-        document.getElementById(id);
+  document.getElementById(
+    "resultTitle"
+  ).textContent=
+    result.title;
 
 
-      target.classList.add(
-        "active"
-      );
-
-    }
-
-
-    /* =========================
-       الاختيار الأول
-    ========================= */
-
-    function choose(type) {
-
-      const data = {
-
-        light: {
-
-          title:
-            "النور اختارك.",
-
-          text:
-            "يمكن لأنك طول الوقت بتدور على حاجة واضحة وسط كل ده. بس مش كل نور بيكشف الحقيقة.",
-
-          symbol:
-            "☀️"
-
-        },
+  document.getElementById(
+    "resultText"
+  ).textContent=
+    result.text;
 
 
-        silence: {
-
-          title:
-            "إنت سمعت السكوت.",
-
-          text:
-            "وده نادر. لأن أغلب الناس بتخاف من اللحظة اللي مفيهاش صوت.",
-
-          symbol:
-            "◌"
-
-        },
+  document.getElementById(
+    "symbol"
+  ).textContent=
+    result.symbol;
 
 
-        fear: {
-
-          title:
-            "الخوف دخل قبلك.",
-
-          text:
-            "بس الغريب؟ إنك كملت رغم وجوده. يمكن دي كانت الإجابة من البداية.",
-
-          symbol:
-            "⌁"
-
-        },
+  particles(
+    result.symbol
+  );
 
 
-        curiosity: {
+  goTo("result");
 
-          title:
-            "الفضول كسب.",
-
-          text:
-            "وده أخطر اختيار في الرحلة دي كلها… لأنه مبيسمحلكش ترجع زي ما كنت.",
-
-          symbol:
-            "✦"
-
-        }
-
-      };
+}
 
 
-      const result =
-        data[type];
+/* =====================================
+   SECRET
+===================================== */
+
+function openSecret(){
+
+  document
+    .getElementById(
+      "secret"
+    )
+    .classList.add(
+      "show"
+    );
 
 
-      document.getElementById(
-        "resultTitle"
-      ).textContent =
-        result.title;
+  particles("🔐");
+
+}
 
 
-      document.getElementById(
-        "resultText"
-      ).textContent =
-        result.text;
+function closeSecret(){
+
+  document
+    .getElementById(
+      "secret"
+    )
+    .classList.remove(
+      "show"
+    );
 
 
-      document.getElementById(
-        "symbol"
-      ).textContent =
-        result.symbol;
+  goTo("second");
+
+}
 
 
-      goTo("result");
+/* =====================================
+   FINAL
+===================================== */
+
+function finish(type){
+
+  const endings={
+
+    now:{
+
+      title:
+        "دلوقتي.",
+
+      text:
+        "كل حاجة مهمة حصلت لما بطلت تستنى."
+
+    },
+
+
+    later:{
+
+      title:
+        "بعدين.",
+
+      text:
+        "أحيانًا التأجيل مش هروب… أحيانًا هو وقتك الحقيقي."
+
+    },
+
+
+    always:{
+
+      title:
+        "دائمًا.",
+
+      text:
+        "بعض الحكايات مبتنتهيش، حتى لما الصفحة تقفل."
+
+    },
+
+
+    never:{
+
+      title:
+        "أبدًا.",
+
+      text:
+        "يمكن بعض الأبواب اتعملت عشان تتساب مقفولة."
 
     }
 
-
-    /* =========================
-       النهاية
-    ========================= */
-
-    function finish(type) {
-
-      const endings = {
-
-        now: {
-
-          title:
-            "دلوقتي.",
-
-          text:
-            "كل حاجة مهمة حصلت لما بطلت تستنى."
-
-        },
+  };
 
 
-        later: {
-
-          title:
-            "بعدين.",
-
-          text:
-            "أحيانًا التأجيل مش هروب… أحيانًا هو وقتك الحقيقي."
-
-        },
+  const ending=
+    endings[type];
 
 
-        always: {
-
-          title:
-            "دائمًا.",
-
-          text:
-            "بعض الحكايات مبتنتهيش، حتى لما الصفحة تقفل."
-
-        },
+  document.getElementById(
+    "finalTitle"
+  ).textContent=
+    ending.title;
 
 
-        never: {
-
-          title:
-            "أبدًا.",
-
-          text:
-            "يمكن بعض الأبواب اتعملت عشان تتساب مقفولة."
-
-        }
-
-      };
+  document.getElementById(
+    "finalText"
+  ).textContent=
+    ending.text;
 
 
-      const ending =
-        endings[type];
+  particles("∞");
 
 
-      document.getElementById(
-        "finalTitle"
-      ).textContent =
-        ending.title;
-
-
-      document.getElementById(
-        "finalText"
-      ).textContent =
-        ending.text;
-
-
+  setTimeout(
+    ()=>{
       goTo("final");
+    },
+    450
+  );
 
-    }
+}
 
-  </script>
+
+/* =====================================
+   RESTART
+===================================== */
+
+function restart(){
+
+  portalClicks=0;
+
+  firstChoice="";
+
+
+  document.getElementById(
+    "resultTitle"
+  ).textContent="...";
+
+
+  document.getElementById(
+    "resultText"
+  ).textContent="...";
+
+
+  document.getElementById(
+    "symbol"
+  ).textContent="✦";
+
+
+  document.getElementById(
+    "finalTitle"
+  ).textContent="...";
+
+
+  document.getElementById(
+    "finalText"
+  ).textContent="...";
+
+
+  document
+    .getElementById(
+      "secret"
+    )
+    .classList.remove(
+      "show"
+    );
+
+
+  goTo("start");
+
+}
+
+
+/* =====================================
+   BUTTON EFFECT
+===================================== */
+
+document.addEventListener(
+  "pointerdown",
+  e=>{
+
+    const btn=
+      e.target.closest(
+        "button"
+      );
+
+    if(!btn)
+      return;
+
+
+    btn.animate(
+      [
+        {
+          transform:
+            "scale(1)"
+        },
+
+        {
+          transform:
+            "scale(.94)"
+        },
+
+        {
+          transform:
+            "scale(1)"
+        }
+
+      ],
+      {
+        duration:220
+      }
+    );
+
+  }
+);
+
+</script>
 
 </body>
   </html>
