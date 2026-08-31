@@ -29,6 +29,16 @@ section{position:fixed;inset:0;display:none;z-index:2;align-items:center;justify
 .alt{position:fixed;inset:0;background:radial-gradient(circle,#120a25,#000 70%);z-index:50;display:none;align-items:center;justify-content:center;text-align:center}
 .alt.on{display:flex;animation:altin 1.2s both}
 @keyframes altin{from{opacity:0;filter:blur(12px)}to{opacity:1;filter:none}}
+
+#film{position:fixed;inset:0;background:#000;z-index:120;display:none;align-items:center;justify-content:center;color:#fff;text-align:center}
+#film.on{display:flex;animation:film .9s both}
+.filmword{font-size:clamp(30px,7vw,70px);letter-spacing:8px;text-shadow:0 0 30px #b078ff;animation:word 2.2s ease-in-out infinite}
+@keyframes film{from{opacity:0}to{opacity:1}}@keyframes word{50%{opacity:.35;transform:scale(1.03)}}
+#echo{position:fixed;inset:0;z-index:110;display:none;align-items:center;justify-content:center;background:radial-gradient(circle,#170c2d,#000 72%);text-align:center}
+#echo.on{display:flex;animation:film 1s both}
+
+#cursor{position:fixed;width:18px;height:18px;border:1px solid #c99cff;border-radius:50%;pointer-events:none;z-index:200;transform:translate(-50%,-50%);mix-blend-mode:screen;opacity:.7;transition:width .15s,height .15s}
+#cursor.big{width:55px;height:55px}
 </style></head>
 <body>
 <canvas id="c"></canvas><div class="shade"></div>
@@ -138,6 +148,34 @@ function wake(){
      document.title='UNKNOWN — The Other Side';
    }
  };
+})();
+</script>
+
+<div id="film"><div class="filmword">لا تغمّض عينيك</div></div>
+<section id="i" class="alt"><div class="wrap fade"><div class="eyebrow">UNKNOWN / 08</div><div class="letter">◎</div><h2>شايفه؟</h2><p>المكان نفسه… بس إنت مش نفس الشخص اللي دخله.</p><button class="btn" onclick="show('a');document.getElementById('film').classList.remove('on')">رجوع</button></div></section>
+<script>
+(function(){
+ let clicks=0,last=0;
+ addEventListener('dblclick',()=>{
+   const now=Date.now();
+   if(now-last<900) clicks++; else clicks=1;
+   last=now;
+   if(clicks>=3){
+     clicks=0;
+     const f=document.getElementById('film');f.classList.add('on');
+     setTimeout(()=>{f.classList.remove('on');show('i')},2400);
+   }
+ });
+})();
+</script>
+
+<div id="cursor"></div>
+<script>
+(function(){
+ const c=document.getElementById('cursor');
+ addEventListener('pointermove',e=>{c.style.left=e.clientX+'px';c.style.top=e.clientY+'px'});
+ addEventListener('pointerdown',()=>c.classList.add('big'));
+ addEventListener('pointerup',()=>c.classList.remove('big'));
 })();
 </script>
 </body></html>
