@@ -1,73 +1,53 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>قبل ما تدخل...</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UNKNOWN — لا تبحث عن الإجابة</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
-body{font-family:Cairo,system-ui,sans-serif;background:#02030b;color:#fff}
-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0}
-.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 48%,transparent 15%,rgba(0,0,0,.15) 48%,rgba(0,0,0,.72) 100%)}
-.ui{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px}
-.top{position:absolute;top:24px;right:28px;left:28px;display:flex;justify-content:space-between;align-items:center;color:#d8d1ee;font-size:13px}
-.music{border:1px solid #ffffff22;background:#ffffff0b;color:#eee;padding:10px 15px;border-radius:30px;cursor:pointer;backdrop-filter:blur(10px)}
-.kicker{font-size:13px;letter-spacing:3px;color:#b99cff;margin-bottom:18px;opacity:.9}
-h1{font-size:clamp(42px,8vw,88px);line-height:1.05;margin:0;text-shadow:0 0 35px #a968ff77;font-weight:800}
-.sub{max-width:620px;color:#c7c2d6;font-size:clamp(14px,2vw,19px);line-height:2;margin:22px auto 28px}
-.start{position:relative;border:1px solid #c69aff88;background:linear-gradient(180deg,#8c4dff22,#ffffff08);color:white;border-radius:60px;padding:16px 30px;font:700 17px Cairo;cursor:pointer;box-shadow:0 0 40px #8d54ff25;transition:.3s}
-.start:hover{transform:translateY(-3px);box-shadow:0 0 60px #8d54ff55}
-.start span{display:inline-block;margin-right:10px;transition:.3s}.start:hover span{transform:translateX(-5px)}
-.hint{position:absolute;bottom:24px;color:#aaa3bd;font-size:12px;opacity:.8}
-.portal{position:absolute;width:min(25vw,260px);height:min(39vw,390px);min-width:150px;min-height:235px;left:50%;top:61%;transform:translate(-50%,-50%);border:2px solid #ad77ff88;box-shadow:0 0 18px #a15cff66, inset 0 0 35px #8e50ff33;opacity:.9}
-.portal:before{content:"";position:absolute;inset:-20px;border:1px solid #a56dff22;box-shadow:0 0 80px #8e50ff33;animation:pulse 3s infinite}
-.portal:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 75%,#e9c5ff88,transparent 25%),linear-gradient(#070719aa,#4c286c66 70%,#e5b4ff22);filter:blur(1px)}
-@keyframes pulse{50%{transform:scale(1.04);opacity:.5}}
-.particles{position:absolute;inset:0;overflow:hidden}
-.particles i{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.7;animation:float linear infinite}
-@keyframes float{from{transform:translateY(20px);opacity:0}20%{opacity:.8}to{transform:translateY(-110vh);opacity:0}}
-.page2{position:fixed;inset:0;z-index:5;display:none;align-items:center;justify-content:center;background:#02030b;overflow:hidden}
-.page2.show{display:flex;animation:enter .9s both}
-@keyframes enter{from{opacity:0;transform:scale(1.15)}to{opacity:1;transform:scale(1)}}
-.card{width:min(720px,90vw);padding:44px 30px;text-align:center}
-.card .orb{width:90px;height:90px;border-radius:50%;margin:0 auto 25px;background:radial-gradient(circle,#fff,#a06cff 22%,#28104e 60%,transparent 70%);box-shadow:0 0 80px #995cff}
-.card h2{font-size:clamp(30px,6vw,58px);margin:0 0 15px}.card p{color:#bbb4ca;line-height:2;font-size:16px}
-.next{margin-top:24px;background:transparent;border:1px solid #ffffff30;color:#fff;border-radius:40px;padding:12px 25px;font:600 15px Cairo;cursor:pointer}
-.flash{position:fixed;inset:0;background:#fff;z-index:20;opacity:0;pointer-events:none}
-</style>
-</head>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden}body{font-family:Cairo,system-ui;background:#02030a;color:#fff}
+canvas{position:fixed;inset:0}.shade{position:fixed;inset:0;background:radial-gradient(circle at 50% 48%,transparent 5%,#02030a55 42%,#000c 100%);pointer-events:none}
+.screen{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:25px;z-index:2}.screen.active{display:flex}
+.top{position:absolute;top:22px;left:25px;right:25px;display:flex;justify-content:space-between;align-items:center;color:#aaa;font-size:12px;letter-spacing:2px}
+.pill{border:1px solid #ffffff20;background:#ffffff08;border-radius:30px;padding:9px 14px;backdrop-filter:blur(10px)}
+.hero{text-align:center;max-width:760px}.tiny{color:#b58cff;letter-spacing:5px;font-size:11px;margin-bottom:18px}
+h1{font-size:clamp(44px,9vw,92px);margin:0;line-height:1;text-shadow:0 0 35px #9c59ff66}
+p{color:#bcb7c9;line-height:2;font-size:16px}.btn{border:1px solid #a875ff77;background:#ffffff08;color:#fff;border-radius:40px;padding:14px 28px;font:700 15px Cairo;cursor:pointer;transition:.3s;box-shadow:0 0 30px #8b52ff22}.btn:hover{transform:translateY(-3px);box-shadow:0 0 50px #8b52ff55}
+.portal{width:min(230px,45vw);height:min(340px,62vh);margin:34px auto 20px;border-radius:50% 50% 43% 43%;border:2px solid #b783ff88;box-shadow:0 0 18px #a05cff88,inset 0 0 45px #9d5cff44,0 0 100px #6d39b533;position:relative;overflow:hidden}
+.portal:before{content:"";position:absolute;inset:7px;border-radius:inherit;background:radial-gradient(circle at 50% 70%,#eacaffaa 0,#7542a955 17%,#09051b 63%);animation:breathe 3s ease-in-out infinite}
+@keyframes breathe{50%{filter:brightness(1.35);transform:scale(1.03)}}
+.choicebox{width:min(720px,94vw);text-align:center}.choicebox h2{font-size:clamp(28px,6vw,55px);margin:0 0 8px}.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:25px}.choice{min-height:82px;border:1px solid #ffffff18;background:#ffffff06;color:#eee;border-radius:18px;padding:14px;font:600 15px Cairo;cursor:pointer;transition:.35s}.choice:hover{border-color:#b078ff88;background:#a05cff12;transform:scale(1.02)}
+.story{width:min(760px,94vw);text-align:center}.story .symbol{font-size:58px;filter:drop-shadow(0 0 25px #a96cff)}.story h2{font-size:clamp(30px,6vw,58px);margin:8px}.story p{max-width:600px;margin:0 auto 22px}.fade{animation:fade .8s both}@keyframes fade{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.flash{position:fixed;inset:0;background:#fff;opacity:0;z-index:9;pointer-events:none}
+@media(max-width:600px){.choices{grid-template-columns:1fr}.portal{margin-top:28px;height:250px}}
+</style></head>
 <body>
-<canvas id="space"></canvas><div class="vignette"></div>
-<div class="particles" id="particles"></div>
-<main class="ui" id="home">
-  <div class="top"><div>∞ · ∞ · ∞</div><button class="music" id="music">♪ تشغيل الموسيقى</button></div>
-  <div class="kicker">WELCOME TO THE UNKNOWN</div>
-  <h1>قبل ما تدخل...</h1>
-  <p class="sub">خد نفس عميق، وسيب كل حاجة وراك.<br>من اللحظة دي، إنت داخل عالم مختلف تمامًا.</p>
-  <div class="portal"></div>
-  <button class="start" id="start">ابدأ الرحلة <span>←</span></button>
-  <div class="hint">اسحب لأسفل أو اضغط للبدء</div>
-</main>
-<section class="page2" id="page2">
-  <div class="card">
-    <div class="orb"></div>
-    <h2>أهو دخلت...</h2>
-    <p>دلوقتي مفيش رجوع. ✦<br>الرحلة لسه بتبدأ، وكل خطوة هتغيّر اللي بعدها.</p>
-    <button class="next" id="next">كمّل →</button>
-  </div>
+<canvas id="c"></canvas><div class="shade"></div><div class="flash" id="flash"></div>
+
+<section class="screen active" id="s0">
+ <div class="top"><span>UNKNOWN / 01</span><span class="pill">◌ تجربة تفاعلية</span></div>
+ <div class="hero fade"><div class="tiny">WELCOME TO THE UNKNOWN</div><h1>قبل ما تدخل...</h1>
+ <p>سيب كل حاجة وراك.<br>اللي جاي مش محتاج تفسير.</p><div class="portal"></div>
+ <button class="btn" onclick="go(1)">ابدأ الرحلة ←</button></div>
 </section>
-<div class="flash" id="flash"></div>
+
+<section class="screen" id="s1">
+ <div class="top"><span>UNKNOWN / 02</span><span>اختر بدون تفكير</span></div>
+ <div class="choicebox fade"><div class="tiny">FIRST CHOICE</div><h2>إيه اللي شدّك؟</h2><p>اختار أول حاجة عينك راحت لها.</p>
+ <div class="choices"><button class="choice" onclick="pick('moon')">🌙 النور البعيد</button><button class="choice" onclick="pick('door')">🚪 الباب المقفول</button><button class="choice" onclick="pick('star')">✦ النجمة اللي بتتحرك</button><button class="choice" onclick="pick('void')">◌ الفراغ</button></div></div>
+</section>
+
+<section class="screen" id="s2"><div class="story fade"><div class="symbol" id="sym">✦</div><div class="tiny">UNKNOWN / 03</div><h2 id="title"></h2><p id="text"></p><button class="btn" onclick="reveal()">كمّل</button></div></section>
+<section class="screen" id="s3"><div class="story fade"><div class="symbol">∞</div><div class="tiny">UNKNOWN / FINAL</div><h2>إنت وصلت.</h2><p>بس الغريب إن الرحلة الحقيقية كانت من أول لحظة ضغطت فيها «ابدأ».</p><button class="btn" onclick="restart()">ابدأ من جديد</button></div></section>
+
 <script>
-const canvas=document.getElementById('space'),ctx=canvas.getContext('2d');let W,H,stars=[];
-function resize(){W=canvas.width=innerWidth*devicePixelRatio;H=canvas.height=innerHeight*devicePixelRatio;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';stars=Array.from({length:Math.min(500,Math.floor(innerWidth/2))},()=>({x:Math.random()*W,y:Math.random()*H,z:Math.random()*2+0.2,s:Math.random()*1.8+.2}))}
-function draw(){ctx.clearRect(0,0,W,H);let g=ctx.createRadialGradient(W*.5,H*.55,0,W*.5,H*.55,Math.max(W,H)*.65);g.addColorStop(0,'#17102c');g.addColorStop(.45,'#080719');g.addColorStop(1,'#02030b');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-stars.forEach(a=>{a.y-=a.s*a.z;if(a.y<0)a.y=H;ctx.globalAlpha=.25+a.z*.25;ctx.fillStyle='#fff';ctx.fillRect(a.x,a.y,a.z*1.4,a.z*1.4)});ctx.globalAlpha=1;requestAnimationFrame(draw)}resize();addEventListener('resize',resize);draw();
-const p=document.getElementById('particles');for(let i=0;i<45;i++){let e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.top=(50+Math.random()*55)+'%';e.style.animationDuration=(7+Math.random()*14)+'s';e.style.animationDelay=(-Math.random()*15)+'s';p.appendChild(e)}
-const start=()=>{document.getElementById('flash').animate([{opacity:0},{opacity:1},{opacity:0}],{duration:1100,easing:'ease-in-out'});setTimeout(()=>{document.getElementById('home').style.display='none';document.getElementById('page2').classList.add('show')},480)}
-document.getElementById('start').onclick=start;document.getElementById('next').onclick=()=>alert('هنا هنبدأ المرحلة التانية من التجربة ✦');
-document.getElementById('music').onclick=e=>{e.currentTarget.textContent=e.currentTarget.textContent.includes('تشغيل')?'♪ الموسيقى تعمل':'♪ تشغيل الموسيقى'}
-let sy=0;addEventListener('touchstart',e=>sy=e.touches[0].clientY,{passive:true});addEventListener('touchend',e=>{if(sy-e.changedTouches[0].clientY>70)start()},{passive:true});
-</script>
-</body>
-</html>
+const c=document.getElementById('c'),x=c.getContext('2d');let W,H,stars=[],choice='';
+function resize(){W=c.width=innerWidth*devicePixelRatio;H=c.height=innerHeight*devicePixelRatio;stars=Array.from({length:420},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2+.2,v:Math.random()*1.8+.2}))}resize();addEventListener('resize',resize);
+function loop(){x.clearRect(0,0,W,H);let g=x.createRadialGradient(W*.5,H*.55,0,W*.5,H*.55,Math.max(W,H)*.7);g.addColorStop(0,'#15102b');g.addColorStop(.5,'#060616');g.addColorStop(1,'#010208');x.fillStyle=g;x.fillRect(0,0,W,H);for(const s of stars){s.y-=s.v;if(s.y<0)s.y=H;x.globalAlpha=.25+Math.random()*.55;x.fillStyle='#fff';x.fillRect(s.x,s.y,s.r,s.r)}x.globalAlpha=1;requestAnimationFrame(loop)}loop();
+function go(n){transition(()=>{document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('s'+n).classList.add('active')})}
+function transition(fn){let f=document.getElementById('flash');f.animate([{opacity:0},{opacity:.8},{opacity:0}],{duration:850,easing:'ease-in-out'});setTimeout(fn,280)}
+function pick(v){choice=v;let data={moon:['القمر مش بعيد','إنت بس كنت محتاج تبص لفوق. بعض الحاجات عمرها ما كانت محتاجة تفسير.','☾'],door:['الباب مش مقفول','كان مستنيك تختار تدخله. يمكن الفضول أخطر من الخوف.','◈'],star:['هي كانت بتتحرك فعلًا','لأنها كانت بتدور عليك. أو يمكن إنت اللي كنت بتدور عليها.','✦'],void:['الفراغ مش فاضي','أحيانًا أكتر حاجة بتخوفنا هي الحاجة اللي لسه ملهاش اسم.','◌']}[v];document.getElementById('title').textContent=data[0];document.getElementById('text').textContent=data[1];document.getElementById('sym').textContent=data[2];go(2)}
+function reveal(){go(3)}
+function restart(){choice='';go(0)}
+let sy=0;addEventListener('touchstart',e=>sy=e.touches[0].clientY,{passive:true});addEventListener('touchend',e=>{if(sy-e.changedTouches[0].clientY>80&&document.getElementById('s0').classList.contains('active'))go(1)},{passive:true});
+</script></body></html>
