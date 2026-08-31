@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>قبل ما تدخل...</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{font-family:Cairo,system-ui,sans-serif;background:#02030b;color:#fff}
+canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 48%,transparent 15%,rgba(0,0,0,.15) 48%,rgba(0,0,0,.72) 100%)}
+.ui{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px}
+.top{position:absolute;top:24px;right:28px;left:28px;display:flex;justify-content:space-between;align-items:center;color:#d8d1ee;font-size:13px}
+.music{border:1px solid #ffffff22;background:#ffffff0b;color:#eee;padding:10px 15px;border-radius:30px;cursor:pointer;backdrop-filter:blur(10px)}
+.kicker{font-size:13px;letter-spacing:3px;color:#b99cff;margin-bottom:18px;opacity:.9}
+h1{font-size:clamp(42px,8vw,88px);line-height:1.05;margin:0;text-shadow:0 0 35px #a968ff77;font-weight:800}
+.sub{max-width:620px;color:#c7c2d6;font-size:clamp(14px,2vw,19px);line-height:2;margin:22px auto 28px}
+.start{position:relative;border:1px solid #c69aff88;background:linear-gradient(180deg,#8c4dff22,#ffffff08);color:white;border-radius:60px;padding:16px 30px;font:700 17px Cairo;cursor:pointer;box-shadow:0 0 40px #8d54ff25;transition:.3s}
+.start:hover{transform:translateY(-3px);box-shadow:0 0 60px #8d54ff55}
+.start span{display:inline-block;margin-right:10px;transition:.3s}.start:hover span{transform:translateX(-5px)}
+.hint{position:absolute;bottom:24px;color:#aaa3bd;font-size:12px;opacity:.8}
+.portal{position:absolute;width:min(25vw,260px);height:min(39vw,390px);min-width:150px;min-height:235px;left:50%;top:61%;transform:translate(-50%,-50%);border:2px solid #ad77ff88;box-shadow:0 0 18px #a15cff66, inset 0 0 35px #8e50ff33;opacity:.9}
+.portal:before{content:"";position:absolute;inset:-20px;border:1px solid #a56dff22;box-shadow:0 0 80px #8e50ff33;animation:pulse 3s infinite}
+.portal:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 75%,#e9c5ff88,transparent 25%),linear-gradient(#070719aa,#4c286c66 70%,#e5b4ff22);filter:blur(1px)}
+@keyframes pulse{50%{transform:scale(1.04);opacity:.5}}
+.particles{position:absolute;inset:0;overflow:hidden}
+.particles i{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.7;animation:float linear infinite}
+@keyframes float{from{transform:translateY(20px);opacity:0}20%{opacity:.8}to{transform:translateY(-110vh);opacity:0}}
+.page2{position:fixed;inset:0;z-index:5;display:none;align-items:center;justify-content:center;background:#02030b;overflow:hidden}
+.page2.show{display:flex;animation:enter .9s both}
+@keyframes enter{from{opacity:0;transform:scale(1.15)}to{opacity:1;transform:scale(1)}}
+.card{width:min(720px,90vw);padding:44px 30px;text-align:center}
+.card .orb{width:90px;height:90px;border-radius:50%;margin:0 auto 25px;background:radial-gradient(circle,#fff,#a06cff 22%,#28104e 60%,transparent 70%);box-shadow:0 0 80px #995cff}
+.card h2{font-size:clamp(30px,6vw,58px);margin:0 0 15px}.card p{color:#bbb4ca;line-height:2;font-size:16px}
+.next{margin-top:24px;background:transparent;border:1px solid #ffffff30;color:#fff;border-radius:40px;padding:12px 25px;font:600 15px Cairo;cursor:pointer}
+.flash{position:fixed;inset:0;background:#fff;z-index:20;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<canvas id="space"></canvas><div class="vignette"></div>
+<div class="particles" id="particles"></div>
+<main class="ui" id="home">
+  <div class="top"><div>∞ · ∞ · ∞</div><button class="music" id="music">♪ تشغيل الموسيقى</button></div>
+  <div class="kicker">WELCOME TO THE UNKNOWN</div>
+  <h1>قبل ما تدخل...</h1>
+  <p class="sub">خد نفس عميق، وسيب كل حاجة وراك.<br>من اللحظة دي، إنت داخل عالم مختلف تمامًا.</p>
+  <div class="portal"></div>
+  <button class="start" id="start">ابدأ الرحلة <span>←</span></button>
+  <div class="hint">اسحب لأسفل أو اضغط للبدء</div>
+</main>
+<section class="page2" id="page2">
+  <div class="card">
+    <div class="orb"></div>
+    <h2>أهو دخلت...</h2>
+    <p>دلوقتي مفيش رجوع. ✦<br>الرحلة لسه بتبدأ، وكل خطوة هتغيّر اللي بعدها.</p>
+    <button class="next" id="next">كمّل →</button>
+  </div>
+</section>
+<div class="flash" id="flash"></div>
+<script>
+const canvas=document.getElementById('space'),ctx=canvas.getContext('2d');let W,H,stars=[];
+function resize(){W=canvas.width=innerWidth*devicePixelRatio;H=canvas.height=innerHeight*devicePixelRatio;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';stars=Array.from({length:Math.min(500,Math.floor(innerWidth/2))},()=>({x:Math.random()*W,y:Math.random()*H,z:Math.random()*2+0.2,s:Math.random()*1.8+.2}))}
+function draw(){ctx.clearRect(0,0,W,H);let g=ctx.createRadialGradient(W*.5,H*.55,0,W*.5,H*.55,Math.max(W,H)*.65);g.addColorStop(0,'#17102c');g.addColorStop(.45,'#080719');g.addColorStop(1,'#02030b');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+stars.forEach(a=>{a.y-=a.s*a.z;if(a.y<0)a.y=H;ctx.globalAlpha=.25+a.z*.25;ctx.fillStyle='#fff';ctx.fillRect(a.x,a.y,a.z*1.4,a.z*1.4)});ctx.globalAlpha=1;requestAnimationFrame(draw)}resize();addEventListener('resize',resize);draw();
+const p=document.getElementById('particles');for(let i=0;i<45;i++){let e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.top=(50+Math.random()*55)+'%';e.style.animationDuration=(7+Math.random()*14)+'s';e.style.animationDelay=(-Math.random()*15)+'s';p.appendChild(e)}
+const start=()=>{document.getElementById('flash').animate([{opacity:0},{opacity:1},{opacity:0}],{duration:1100,easing:'ease-in-out'});setTimeout(()=>{document.getElementById('home').style.display='none';document.getElementById('page2').classList.add('show')},480)}
+document.getElementById('start').onclick=start;document.getElementById('next').onclick=()=>alert('هنا هنبدأ المرحلة التانية من التجربة ✦');
+document.getElementById('music').onclick=e=>{e.currentTarget.textContent=e.currentTarget.textContent.includes('تشغيل')?'♪ الموسيقى تعمل':'♪ تشغيل الموسيقى'}
+let sy=0;addEventListener('touchstart',e=>sy=e.touches[0].clientY,{passive:true});addEventListener('touchend',e=>{if(sy-e.changedTouches[0].clientY>70)start()},{passive:true});
+</script>
+</body>
+</html>
