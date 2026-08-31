@@ -26,7 +26,8 @@ section{position:fixed;inset:0;display:none;z-index:2;align-items:center;justify
 
 <section id="d"><div class="wrap fade"><div class="eyebrow">ONE LAST THING</div><h2>قبل النهاية...</h2><p>بص حواليك.<br>اختار كلمة واحدة بس، من غير ما تفكر.</p><div class="choices"><button class="choice" onclick="finish('now')">الآن</button><button class="choice" onclick="finish('later')">بعدين</button><button class="choice" onclick="finish('always')">دائمًا</button><button class="choice" onclick="finish('never')">أبدًا</button></div></div></section>
 
-<section id="e" class="final"><div class="wrap fade"><div class="eyebrow">UNKNOWN / 05</div><h1 id="end">...</h1><p id="endp"></p><button class="btn" onclick="show('a')">↻ إعادة الرحلة</button></div></section>
+<section id="e" class="final"><div class="wrap fade"><div class="eyebrow">UNKNOWN / 05</div><h1 id="end">...</h1><p id="endp"></p><button class="btn" onclick="secret()">مستعد لآخر حاجة؟</button></div></section>
+<section id="f" class="final"><div class="wrap fade"><div class="eyebrow">UNKNOWN / 06</div><div class="letter">◈</div><h2>متبصش وراك.</h2><p>فيه حاجات اتغيرت من أول ما دخلت.<br>ولو رجعت للبداية… مش هتلاقيها زي الأول.</p><button class="btn" onclick="show('a');setTimeout(()=>document.querySelector('#a .eyebrow').textContent='YOU CAME BACK',300)">ارجع للبداية ←</button></div></section>
 
 <script>
 const cvs=document.querySelector('canvas'),ctx=cvs.getContext('2d');let W,H,stars=[];
@@ -35,5 +36,18 @@ function draw(){ctx.clearRect(0,0,W,H);let g=ctx.createRadialGradient(W*.5,H*.5,
 function show(id){document.querySelectorAll('section').forEach(s=>s.classList.remove('on'));let el=document.getElementById(id);el.classList.add('on');el.querySelector('.wrap')?.classList.remove('fade');void el.offsetWidth;el.querySelector('.wrap')?.classList.add('fade')}
 let first='';
 function choose(v){first=v;let d={light:['النور اختارك.','يمكن لأنك طول الوقت بتدور على حاجة واضحة وسط كل ده. بس مش كل نور بيكشف الحقيقة.','☀️'],silence:['إنت سمعت السكوت.','وده نادر. لأن أغلب الناس بتخاف من اللحظة اللي مفيهاش صوت.','◌'],fear:['الخوف دخل قبلك.','بس الغريب؟ إنك كملت رغم وجوده. يمكن دي كانت الإجابة من البداية.','⌁'],curiosity:['الفضول كسب.','وده أخطر اختيار في الرحلات دي كلها… لأنه مبيسمحلكش ترجع زي ما كنت.','✦']}[v];document.getElementById('ttl').textContent=d[0];document.getElementById('txt').textContent=d[1];document.getElementById('ico').textContent=d[2];setTimeout(()=>document.getElementById('bar').style.width='100%',100);show('c1')}
-function finish(v){let m={now:['دلوقتي.','كل حاجة مهمة حصلت لما بطلت تستنى.'],later:['مش دلوقتي.','أحيانًا التأجيل مش هروب… أحيانًا هو وقتك الحقيقي.'],always:['دائمًا.','بعض الحكايات مبتنتهيش، حتى لما الصفحة تقفل.'],never:['أبدًا.','يمكن بعض الأبواب اتعملت عشان تتساب مقفولة.']}[v];let e=document.getElementById('end');e.textContent=m[0];document.getElementById('endp').textContent=m[1];e.classList.remove('glitch');void e.offsetWidth;e.classList.add('glitch');show('e')}
-</script></body></html>
+function secret(){show('f')}\nfunction finish(v){let m={now:['دلوقتي.','كل حاجة مهمة حصلت لما بطلت تستنى.'],later:['مش دلوقتي.','أحيانًا التأجيل مش هروب… أحيانًا هو وقتك الحقيقي.'],always:['دائمًا.','بعض الحكايات مبتنتهيش، حتى لما الصفحة تقفل.'],never:['أبدًا.','يمكن بعض الأبواب اتعملت عشان تتساب مقفولة.']}[v];let e=document.getElementById('end');e.textContent=m[0];document.getElementById('endp').textContent=m[1];e.classList.remove('glitch');void e.offsetWidth;e.classList.add('glitch');show('e')}
+</script>
+<div id="ambient" style="position:fixed;inset:0;pointer-events:none;z-index:8;opacity:0;transition:opacity 1s">
+  <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#b477ff10,transparent 35%);mix-blend-mode:screen"></div>
+</div>
+<script>
+let idle;
+function wake(){
+ document.getElementById('ambient').style.opacity='1';
+ clearTimeout(idle);
+ idle=setTimeout(()=>document.getElementById('ambient').style.opacity='0',1800);
+}
+['pointermove','touchstart','click'].forEach(e=>addEventListener(e,wake,{passive:true}));
+</script>
+</body></html>
